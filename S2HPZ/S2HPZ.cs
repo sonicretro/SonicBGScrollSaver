@@ -27,7 +27,6 @@ namespace S2HPZ
 			LevelData.LoadGame("./setup.ini");
 			LevelData.LoadLevel("Level", true);
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
-			levelimg.ScrollHorizontal(int.MinValue);
 			CyclingPal_HPZWater = SonLVLColor.Load("HPZ Water Cycle.bin", EngineVersion.S2).Select(a => a.RGBColor).ToArray();
 			Horiz_Scroll_Buf = new int[Math.Min(height, levelimg.Height)];
 			Camera_BG_Y_pos.hsw = -0x40;
