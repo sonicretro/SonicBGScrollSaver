@@ -44,6 +44,7 @@ namespace SonicBGScrollSaver
 		Settings settings;
 		List<KeyValuePair<string, Level>> levels = new List<KeyValuePair<string, Level>>();
 		int currentlevel = -1;
+		bool playMusic;
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
@@ -51,12 +52,13 @@ namespace SonicBGScrollSaver
 			gfx.SetOptions();
 			Environment.CurrentDirectory = Application.StartupPath;
 			settings = Settings.Load();
-			if (!previewMode && settings.PlayMusic)
+			if (!previewMode)
 			{
 				Music.Init();
 				if (settings.MusicVolume != 100)
 					Music.SetVolume(settings.MusicVolume / 100d);
 			}
+			playMusic = settings.PlayMusic;
 			FrameTimer.Interval = 1 / (double)Math.Max(Math.Min((int)settings.FramesPerSecond, 60), 1) * 1000;
 			hscrollspeed = settings.ScrollSpeed;
 			SwitchTimer.Interval = settings.DisplayTime.TotalMilliseconds;
@@ -101,7 +103,7 @@ namespace SonicBGScrollSaver
 			level.Init(Width, Height);
 			BackColor = LevelData.Palette[0][2, 0].RGBColor;
 			DrawInvoker = () => BackgroundImage = level.GetBG();
-			if (!previewMode && settings.PlayMusic)
+			if (!previewMode && playMusic)
 				level.PlayMusic();
 			FrameTimer.Start();
 			if (levels.Count > 1)
@@ -146,6 +148,18 @@ namespace SonicBGScrollSaver
 					break;
 				case Keys.W:
 					level.ToggleWater();
+					break;
+				case Keys.M:
+					if (playMusic)
+					{
+						Music.StopSong();
+						playMusic = false;
+					}
+					else
+					{
+						level.PlayMusic();
+						playMusic = true;
+					}
 					break;
 				default:
 					level = null;
