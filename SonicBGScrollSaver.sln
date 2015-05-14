@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonicBGScrollSaver", "Sonic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S2HPZ", "S2HPZ\S2HPZ.csproj", "{669DC177-624D-4078-B354-64FE519D5D43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LZ", "LZ\LZ.csproj", "{9D1837F1-E1B1-40B1-86ED-D7A724AF9626}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -21,6 +23,10 @@ Global
 		{669DC177-624D-4078-B354-64FE519D5D43}.Debug|x86.Build.0 = Debug|x86
 		{669DC177-624D-4078-B354-64FE519D5D43}.Release|x86.ActiveCfg = Release|x86
 		{669DC177-624D-4078-B354-64FE519D5D43}.Release|x86.Build.0 = Release|x86
+		{9D1837F1-E1B1-40B1-86ED-D7A724AF9626}.Debug|x86.ActiveCfg = Debug|x86
+		{9D1837F1-E1B1-40B1-86ED-D7A724AF9626}.Debug|x86.Build.0 = Debug|x86
+		{9D1837F1-E1B1-40B1-86ED-D7A724AF9626}.Release|x86.ActiveCfg = Release|x86
+		{9D1837F1-E1B1-40B1-86ED-D7A724AF9626}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
