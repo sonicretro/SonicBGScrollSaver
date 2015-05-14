@@ -92,6 +92,7 @@ namespace SonicBGScrollSaver
 				int a;
 				do { a = random.Next(levels.Count); }
 				while (a == currentlevel);
+				currentlevel = a;
 			}
 			else
 				currentlevel = (currentlevel + 1) % levels.Count;
