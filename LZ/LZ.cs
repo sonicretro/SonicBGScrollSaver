@@ -89,8 +89,11 @@ namespace LZ
 				else if (Height > bmp.Height && water)
 				{
 					BitmapBits tmpbmp = new BitmapBits(bmp.Width, Height);
-					for (int i = 0; i < Height; i += bmp.Height)
-						tmpbmp.DrawBitmapBounded(bmp, 0, i);
+					for (int i = 0; i < tmpbmp.Bits.Length; i += bmp.Bits.Length)
+						if (i + bmp.Bits.Length <= tmpbmp.Bits.Length)
+							bmp.Bits.CopyTo(tmpbmp.Bits, i);
+						else
+							Array.Copy(bmp.Bits, 0, tmpbmp.Bits, i, tmpbmp.Bits.Length % bmp.Bits.Length);
 					bmp = tmpbmp;
 				}
 				if (!oscDir)
@@ -112,8 +115,7 @@ namespace LZ
 				if (water)
 				{
 					int screenwater = waterheight - Camera_BG_Y_pos + (oscVal.b1 >> 1);
-					for (int i = 0; i < Math.Min(screenwater, bmp.Height); i++)
-						Horiz_Scroll_Buf[i] = Camera_BG_X_pos;
+					Horiz_Scroll_Buf.FastFill(Camera_BG_X_pos, 0, Math.Min(screenwater, bmp.Height));
 					d2 = (byte)(d2 + screenwater);
 					for (int i = Math.Max(screenwater, 0); i < bmp.Height; i++)
 						Horiz_Scroll_Buf[i] = Camera_BG_X_pos + Drown_WobbleData[d2++];
@@ -131,8 +133,8 @@ namespace LZ
 					}
 					for (int i = 0; i < bmp.Width; i += 0xC0)
 						bmp.DrawSprite(surfacesprites[surfaceframe], surfx + i, screenwater);
-					for (int i = Math.Max(bmp.GetPixelIndex(0, screenwater), 0); i < bmp.Bits.Length; i++)
-						bmp.Bits[i] += 64;
+					if (screenwater < Height)
+						bmp.ApplyWaterPalette(Math.Max(screenwater, 0));
 				}
 				else
 				{
