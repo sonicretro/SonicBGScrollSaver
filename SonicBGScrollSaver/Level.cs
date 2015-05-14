@@ -10,5 +10,6 @@ namespace SonicBGScrollSaver
 		public virtual void UpdatePalette() { }
 		public virtual void UpdateAnimatedTiles() { }
 		public virtual void PlayMusic() { }
+		public virtual void ToggleWater() { }
 	}
 }

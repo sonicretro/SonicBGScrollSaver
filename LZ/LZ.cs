@@ -127,6 +127,11 @@ namespace LZ
 		{
 			SonicBGScrollSaver.Music.PlaySong(IniSerializer.Deserialize<MusicInfo>("setup.ini").Music);
 		}
+
+		public override void ToggleWater()
+		{
+			water = !water;
+		}
 	}
 
 	[StructLayout(LayoutKind.Explicit, Size = 4)]

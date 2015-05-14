@@ -129,7 +129,7 @@ namespace SonicBGScrollSaver
 
 		private void MainForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (previewMode) return;
+			if (previewMode || level == null) return;
 			switch (e.KeyCode)
 			{
 				case Keys.Left:
@@ -143,6 +143,9 @@ namespace SonicBGScrollSaver
 					break;
 				case Keys.Down:
 					vscrollspeed = 4;
+					break;
+				case Keys.W:
+					level.ToggleWater();
 					break;
 				default:
 					level = null;
