@@ -150,7 +150,7 @@ namespace S2HPZ
 
 		public override void PlayMusic()
 		{
-			SonicBGScrollSaver.Music.PlaySong("MysticCave2P");
+			SonicBGScrollSaver.Music.PlaySong(IniSerializer.Deserialize<MusicInfo>("setup.ini").Music);
 		}
 	}
 
@@ -300,5 +300,12 @@ namespace S2HPZ
 		{
 			return new BWL(sl);
 		}
+	}
+
+	internal class MusicInfo
+	{
+		[System.ComponentModel.DefaultValue("MysticCave2P")]
+		[IniName("music")]
+		public string Music { get; set; }
 	}
 }
