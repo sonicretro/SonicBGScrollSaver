@@ -108,7 +108,7 @@ namespace LZ
 						surfacetimer = 7;
 						surfaceframe = (byte)((surfaceframe + 1) % 3);
 					}
-					for (int i = 0; i < Width; i += 0x60)
+					for (int i = 0; i < bmp.Width; i += 0xC0)
 						bmp.DrawSprite(surfacesprites[surfaceframe], surfx + i, screenwater);
 					for (int i = bmp.GetPixelIndex(0, screenwater); i < bmp.Bits.Length; i++)
 						bmp.Bits[i] += 64;
