@@ -42,6 +42,11 @@ namespace LZ
 			-3, -3, -3, -3, -3, -3, -2, -2, -2, -2, -2, -1, -1, -1, -1, -1
 			};
 
+		bool oscDir;
+		short oscRate;
+		BWL oscVal;
+		const short oscFreq = 2, oscAmp = 0x10;
+
 		public override void Init(int width, int height)
 		{
 			Width = width;
@@ -59,6 +64,8 @@ namespace LZ
 			Horiz_Scroll_Buf = new int[height];
 			waterheight = height / 2;
 			water = true;
+			oscVal = 0x80;
+			oscRate = 0;
 			Camera_BG_X_pos = 0;
 			Camera_BG_Y_pos = 0;
 			UpdateScrolling(0, 0);
@@ -86,11 +93,25 @@ namespace LZ
 						tmpbmp.DrawBitmapBounded(bmp, 0, i);
 					bmp = tmpbmp;
 				}
+				if (!oscDir)
+				{
+					oscRate += oscFreq;
+					oscVal.sw += oscRate;
+					if (oscVal.b1 > oscAmp)
+						oscDir = true;
+				}
+				else
+				{
+					oscRate -= oscFreq;
+					oscVal.sw += oscRate;
+					if (oscVal.b1 <= oscAmp)
+						oscDir = false;
+				}
 				byte d2 = LZ_Water_Ripple.b1;
 				LZ_Water_Ripple.w += 0x80;
 				if (water)
 				{
-					int screenwater = waterheight - Camera_BG_Y_pos;
+					int screenwater = waterheight - Camera_BG_Y_pos + (oscVal.b1 >> 1);
 					for (int i = 0; i < Math.Min(screenwater, bmp.Height); i++)
 						Horiz_Scroll_Buf[i] = Camera_BG_X_pos;
 					d2 = (byte)(d2 + screenwater);
