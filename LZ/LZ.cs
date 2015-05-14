@@ -91,10 +91,10 @@ namespace LZ
 				if (water)
 				{
 					int screenwater = waterheight - Camera_BG_Y_pos;
-					for (int i = 0; i < screenwater; i++)
+					for (int i = 0; i < Math.Min(screenwater, bmp.Height); i++)
 						Horiz_Scroll_Buf[i] = Camera_BG_X_pos;
 					d2 = (byte)(d2 + screenwater);
-					for (int i = screenwater; i < bmp.Height; i++)
+					for (int i = Math.Max(screenwater, 0); i < bmp.Height; i++)
 						Horiz_Scroll_Buf[i] = Camera_BG_X_pos + Drown_WobbleData[d2++];
 					bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
 					if (Width < bmp.Width)
@@ -110,7 +110,7 @@ namespace LZ
 					}
 					for (int i = 0; i < bmp.Width; i += 0xC0)
 						bmp.DrawSprite(surfacesprites[surfaceframe], surfx + i, screenwater);
-					for (int i = bmp.GetPixelIndex(0, screenwater); i < bmp.Bits.Length; i++)
+					for (int i = Math.Max(bmp.GetPixelIndex(0, screenwater), 0); i < bmp.Bits.Length; i++)
 						bmp.Bits[i] += 64;
 				}
 				else

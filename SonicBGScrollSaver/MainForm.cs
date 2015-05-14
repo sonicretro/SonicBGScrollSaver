@@ -40,7 +40,7 @@ namespace SonicBGScrollSaver
 		private static readonly System.Timers.Timer SwitchTimer = new System.Timers.Timer() { AutoReset = true };
 		Graphics gfx;
 		Level level;
-		short hscrollspeed = 8;
+		short hscrollspeed = 8, vscrollspeed;
 		Settings settings;
 		List<KeyValuePair<string, Level>> levels = new List<KeyValuePair<string, Level>>();
 		int currentlevel = -1;
@@ -122,7 +122,8 @@ namespace SonicBGScrollSaver
 			if (level == null) return;
 			level.UpdatePalette();
 			level.UpdateAnimatedTiles();
-			level.UpdateScrolling(hscrollspeed, 0);
+			level.UpdateScrolling(hscrollspeed, vscrollspeed);
+			vscrollspeed = 0;
 			Invoke(DrawInvoker);
 		}
 
@@ -136,6 +137,12 @@ namespace SonicBGScrollSaver
 					break;
 				case Keys.Right:
 					hscrollspeed++;
+					break;
+				case Keys.Up:
+					vscrollspeed = -4;
+					break;
+				case Keys.Down:
+					vscrollspeed = 4;
 					break;
 				default:
 					level = null;
