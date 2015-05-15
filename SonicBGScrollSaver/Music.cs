@@ -45,8 +45,15 @@ namespace SonicBGScrollSaver
 			short songCount = 0;
 			foreach (string song in IniSerializer.Deserialize<SongList>(ini).songs.Keys)
 				songNums.Add(song, songCount++);
+			string dir = Environment.CurrentDirectory;
+			Environment.CurrentDirectory = Path.Combine(Environment.CurrentDirectory, "lib" + (IntPtr.Size == 8 ? "64" : "32"));
 			try { InitializeDriver(); }
-			catch { return; }
+			catch
+			{
+				Environment.CurrentDirectory = dir;
+				return;
+			}
+			Environment.CurrentDirectory = dir;
 			uint custcnt;
 			IntPtr* p = GetCustomSongs(out custcnt);
 			for (uint i = 0; i < custcnt; i++)
