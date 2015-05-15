@@ -161,6 +161,12 @@ namespace SonicBGScrollSaver
 						playMusic = true;
 					}
 					break;
+				case Keys.N:
+					level = null;
+					FrameTimer.Stop();
+					SwitchTimer.Stop();
+					ChangeLevel();
+					break;
 				default:
 					level = null;
 					FrameTimer.Stop();
