@@ -11,7 +11,8 @@ namespace LZ
 	public class LZ : SonicBGScrollSaver.Level
 	{
 		int[] Horiz_Scroll_Buf;
-		short Camera_BG_X_pos, Camera_BG_Y_pos;
+		BWL Camera_BG_X_pos;
+		short Camera_BG_Y_pos;
 		BWL LZ_Water_Ripple;
 		BitmapBits levelimg;
 		Bitmap bgimg = new Bitmap(1, 1);
@@ -80,7 +81,7 @@ namespace LZ
 		{
 			lock (bgimg)
 			{
-				Camera_BG_X_pos += Camera_X_pos_diff;
+				Camera_BG_X_pos.sl += Camera_X_pos_diff << 15;
 				Camera_BG_Y_pos += Camera_Y_pos_diff;
 				BitmapBits bmp = new BitmapBits(levelimg);
 				bmp.ScrollVertical(Camera_BG_Y_pos);
@@ -116,14 +117,14 @@ namespace LZ
 				{
 					int screenwater = waterheight - Camera_BG_Y_pos + (oscVal.b1 >> 1);
 					if (screenwater > 0)
-						Horiz_Scroll_Buf.FastFill(Camera_BG_X_pos, 0, Math.Min(screenwater, bmp.Height));
+						Horiz_Scroll_Buf.FastFill(Camera_BG_X_pos.hsw, 0, Math.Min(screenwater, bmp.Height));
 					d2 = (byte)(d2 + screenwater);
 					for (int i = Math.Max(screenwater, 0); i < bmp.Height; i++)
-						Horiz_Scroll_Buf[i] = Camera_BG_X_pos + Drown_WobbleData[d2++];
+						Horiz_Scroll_Buf[i] = Camera_BG_X_pos.hsw + Drown_WobbleData[d2++];
 					bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
 					if (Width < bmp.Width)
 						bmp = bmp.GetSection(0, 0, Width, bmp.Height);
-					int surfx = -(Camera_BG_X_pos % 0x20) + 0x60;
+					int surfx = -(Camera_BG_X_pos.hsw % 0x20) + 0x60;
 					if (shiftsurface)
 						surfx += 0x20;
 					shiftsurface = !shiftsurface;
@@ -139,7 +140,7 @@ namespace LZ
 				}
 				else
 				{
-					bmp.ScrollHorizontal(Camera_BG_X_pos);
+					bmp.ScrollHorizontal(Camera_BG_X_pos.hsw);
 					if (Width < bmp.Width)
 						bmp = bmp.GetSection(0, 0, Width, bmp.Height);
 				}
