@@ -38,7 +38,7 @@
 			this.DoubleBuffered = true;
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "MainForm";
-			this.Text = "Form1";
+			this.Text = "Sonic Background Scrolling Screensaver";
 			this.Load += new System.EventHandler(this.Form1_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseDown);
