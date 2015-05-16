@@ -77,6 +77,7 @@ namespace SonicBGScrollSaver
 			}
 			if (levels.Count == 0)
 			{
+				Cursor.Show();
 				MessageBox.Show("Hey, you don't have any levels selected! Try the Configure option.", "Sonic Background Scrolling Screensaver", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Close();
 				return;
