@@ -115,7 +115,8 @@ namespace LZ
 				if (water)
 				{
 					int screenwater = waterheight - Camera_BG_Y_pos + (oscVal.b1 >> 1);
-					Horiz_Scroll_Buf.FastFill(Camera_BG_X_pos, 0, Math.Min(screenwater, bmp.Height));
+					if (screenwater > 0)
+						Horiz_Scroll_Buf.FastFill(Camera_BG_X_pos, 0, Math.Min(screenwater, bmp.Height));
 					d2 = (byte)(d2 + screenwater);
 					for (int i = Math.Max(screenwater, 0); i < bmp.Height; i++)
 						Horiz_Scroll_Buf[i] = Camera_BG_X_pos + Drown_WobbleData[d2++];
