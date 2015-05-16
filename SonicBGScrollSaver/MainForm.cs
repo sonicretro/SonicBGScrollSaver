@@ -62,7 +62,7 @@ namespace SonicBGScrollSaver
 			FrameTimer.Interval = 1 / (double)Math.Max(Math.Min((int)settings.FramesPerSecond, 60), 1) * 1000;
 			hscrollspeed = settings.ScrollSpeed;
 			SwitchTimer.Interval = settings.DisplayTime.TotalMilliseconds;
-			foreach (string item in settings.Levels)
+			foreach (string item in settings.Levels ?? System.Linq.Enumerable.Empty<string>())
 			{
 				if (!File.Exists(Path.Combine(item, "setup.ini")))
 					continue;
@@ -186,6 +186,13 @@ namespace SonicBGScrollSaver
 					Close();
 				}
 			lastmouse = e.Location;
+		}
+
+		private void MainForm_MouseDown(object sender, MouseEventArgs e)
+		{
+			level = null;
+			FrameTimer.Stop();
+			Close();
 		}
 	}
 }

@@ -40,8 +40,9 @@
 			this.Name = "MainForm";
 			this.Text = "Form1";
 			this.Load += new System.EventHandler(this.Form1_Load);
-			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseMove);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
+			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseDown);
+			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseMove);
 			this.ResumeLayout(false);
 
 		}
