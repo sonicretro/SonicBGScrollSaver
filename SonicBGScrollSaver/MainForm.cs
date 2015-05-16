@@ -12,12 +12,15 @@ namespace SonicBGScrollSaver
 	public partial class MainForm : Form
 	{
 		bool previewMode;
+		Rectangle bounds;
+		Size imageSize;
 
 		public MainForm()
 		{
 			InitializeComponent();
 			foreach (Screen scr in Screen.AllScreens)
-				Bounds = Rectangle.Union(Bounds, scr.Bounds);
+				bounds = Rectangle.Union(bounds, scr.Bounds);
+			imageSize = bounds.Size;
 			Cursor.Hide();
 		}
 
@@ -31,8 +34,18 @@ namespace SonicBGScrollSaver
 			ManagedWinapi.Windows.SystemWindow wnd = new ManagedWinapi.Windows.SystemWindow(this);
 			wnd.Style |= ManagedWinapi.Windows.WindowStyleFlags.CHILD;
 			wnd = new ManagedWinapi.Windows.SystemWindow(previewWndHandle);
-			Location = new Point();
-			Size = wnd.Size;
+			bounds.Size = wnd.Size;
+			Size scrnSize = Screen.PrimaryScreen.Bounds.Size;
+			if (scrnSize.Width > scrnSize.Height)
+			{
+				imageSize.Width = (int)(bounds.Width * ((double)scrnSize.Height / bounds.Height));
+				imageSize.Height = scrnSize.Height;
+			}
+			else
+			{
+				imageSize.Width = scrnSize.Width;
+				imageSize.Height = (int)(bounds.Height * ((double)scrnSize.Width / bounds.Width));
+			}
 			previewMode = true;
 		}
 
@@ -51,6 +64,9 @@ namespace SonicBGScrollSaver
 			gfx = CreateGraphics();
 			gfx.SetOptions();
 			Environment.CurrentDirectory = Application.StartupPath;
+#if DEBUG
+			Environment.CurrentDirectory = Environment.CurrentDirectory.Replace("Debug", "Release");
+#endif
 			settings = Settings.Load();
 			if (!previewMode)
 			{
@@ -84,6 +100,7 @@ namespace SonicBGScrollSaver
 			}
 			FrameTimer.Elapsed += new System.Timers.ElapsedEventHandler(FrameTimer_Elapsed);
 			SwitchTimer.Elapsed += new System.Timers.ElapsedEventHandler(SwitchTimer_Elapsed);
+			Bounds = bounds;
 			ChangeLevel();
 		}
 
@@ -101,14 +118,27 @@ namespace SonicBGScrollSaver
 				currentlevel = (currentlevel + 1) % levels.Count;
 			Environment.CurrentDirectory = levels[currentlevel].Key;
 			level = levels[currentlevel].Value;
-			level.Init(Width, Height);
+			level.Init(imageSize.Width, imageSize.Height);
 			BackColor = LevelData.Palette[0][2, 0].RGBColor;
-			DrawInvoker = () => BackgroundImage = level.GetBG();
+			if (previewMode)
+				DrawInvoker = DrawBackgroundPreview;
+			else
+				DrawInvoker = DrawBackground;
 			if (!previewMode && playMusic)
 				level.PlayMusic();
 			FrameTimer.Start();
 			if (levels.Count > 1)
 				SwitchTimer.Start();
+		}
+
+		void DrawBackground()
+		{
+			BackgroundImage = level.GetBG();
+		}
+
+		void DrawBackgroundPreview()
+		{
+			BackgroundImage = new Bitmap(level.GetBG(), Width, Height);
 		}
 
 		void SwitchTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -179,6 +209,7 @@ namespace SonicBGScrollSaver
 		Point? lastmouse;
 		private void MainForm_MouseMove(object sender, MouseEventArgs e)
 		{
+			if (previewMode) return;
 			if (lastmouse.HasValue)
 				if (Math.Sqrt(Math.Pow(e.X - lastmouse.Value.X, 2) + Math.Pow(e.Y - lastmouse.Value.Y, 2)) > 5)
 				{
@@ -191,6 +222,7 @@ namespace SonicBGScrollSaver
 
 		private void MainForm_MouseDown(object sender, MouseEventArgs e)
 		{
+			if (previewMode) return;
 			level = null;
 			FrameTimer.Stop();
 			Close();
