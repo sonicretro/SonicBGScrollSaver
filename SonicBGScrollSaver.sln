@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EHZ", "EHZ\EHZ.csproj", "{1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generic", "Generic\Generic.csproj", "{BE793436-1C11-4DB0-A889-AB4F600F8B69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S2DEZ", "S2DEZ\S2DEZ.csproj", "{C5B76E05-4B64-4B7C-ACB1-01A179CF153A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{BE793436-1C11-4DB0-A889-AB4F600F8B69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE793436-1C11-4DB0-A889-AB4F600F8B69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE793436-1C11-4DB0-A889-AB4F600F8B69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5B76E05-4B64-4B7C-ACB1-01A179CF153A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5B76E05-4B64-4B7C-ACB1-01A179CF153A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5B76E05-4B64-4B7C-ACB1-01A179CF153A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5B76E05-4B64-4B7C-ACB1-01A179CF153A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
