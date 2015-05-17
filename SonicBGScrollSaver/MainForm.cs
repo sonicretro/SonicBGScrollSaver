@@ -193,6 +193,8 @@ namespace SonicBGScrollSaver
 					}
 					break;
 				case Keys.N:
+					if (levels.Count == 1)
+						return;
 					level = null;
 					FrameTimer.Stop();
 					SwitchTimer.Stop();
