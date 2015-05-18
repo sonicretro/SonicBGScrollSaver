@@ -16,12 +16,20 @@ namespace Generic
 		Bitmap bgimg = new Bitmap(1, 1);
 		int Width, Height;
 		LevelInfo levelinfo;
+		double[] hscrollspeeds;
 
 		public override void Init(int width, int height)
 		{
 			Width = width;
 			Height = height;
 			levelinfo = IniSerializer.Deserialize<LevelInfo>("setup.ini");
+			hscrollspeeds = new double[levelinfo.HScrollSpeeds.Count];
+			double lastval = 0;
+			for (int i = 0; i < levelinfo.HScrollSpeeds.Count; i++)
+				if (levelinfo.HScrollSpeeds[i].HasValue)
+					lastval = hscrollspeeds[i] = levelinfo.HScrollSpeeds[i].Value;
+				else
+					hscrollspeeds[i] = lastval;
 			if (string.IsNullOrEmpty(levelinfo.Image))
 			{
 				LevelData.LoadGame("./setup.ini");
@@ -78,6 +86,6 @@ namespace Generic
 		public string Image { get; set; }
 		[IniName("hscroll")]
 		[IniCollection(IniCollectionMode.NoSquareBrackets)]
-		public List<double> HScrollSpeeds { get; set; }
+		public List<double?> HScrollSpeeds { get; set; }
 	}
 }
