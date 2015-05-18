@@ -63,7 +63,7 @@ namespace Generic
 				if (Height < bmp.Height)
 					bmp = bmp.GetSection(0, 0, bmp.Width, Height);
 				for (int i = 0; i < Horiz_Scroll_Buf.Length; i++)
-					Horiz_Scroll_Buf[i] = (int)(Camera_X_pos * levelinfo.HScrollSpeeds[(i + Camera_Y_pos) % levelinfo.HScrollSpeeds.Count]);
+					Horiz_Scroll_Buf[i] = (int)(Camera_X_pos * hscrollspeeds[(i + Camera_Y_pos) % hscrollspeeds.Length]);
 				bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
 				if (Width < bmp.Width)
 					bmp = bmp.GetSection(0, 0, Width, bmp.Height);
