@@ -50,7 +50,7 @@ namespace SonicBGScrollSaver
 		}
 
 		private static readonly System.Timers.Timer FrameTimer = new System.Timers.Timer() { AutoReset = true };
-		private static readonly System.Timers.Timer SwitchTimer = new System.Timers.Timer() { AutoReset = true };
+		private static readonly System.Timers.Timer SwitchTimer = new System.Timers.Timer();
 		Graphics gfx;
 		Level level;
 		short hscrollspeed = 8, vscrollspeed;

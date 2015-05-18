@@ -1,4 +1,5 @@
 ﻿using SonicRetro.SonLVL.API;
+using System;
 using System.Drawing;
 
 namespace MHZ
@@ -9,11 +10,16 @@ namespace MHZ
 		BitmapBits levelimg, layer1img, layer2img;
 		Bitmap bgimg = new Bitmap(1, 1);
 		int Width, Height;
+		LevelInfo levelinfo;
+		System.Timers.Timer paltimer;
+		int curpal;
+		int fadeframe = -1;
 
 		public override void Init(int width, int height)
 		{
 			Width = width;
 			Height = height;
+			levelinfo = IniSerializer.Deserialize<LevelInfo>("setup.ini");
 			LevelData.LoadGame("./setup.ini");
 			LevelData.LoadLevel("Level", true);
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
@@ -26,6 +32,17 @@ namespace MHZ
 				Camera_Y_pos += (short)((levelimg.Height / 2) - (height / 2));
 			Camera_X_pos = 0;
 			UpdateScrolling(0, 0);
+			if (LevelData.Palette.Count > 1)
+			{
+				paltimer = new System.Timers.Timer((levelinfo.PaletteTime ?? TimeSpan.FromMinutes(1)).TotalMilliseconds);
+				paltimer.Elapsed += paltimer_Elapsed;
+				paltimer.Start();
+			}
+		}
+
+		void paltimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			fadeframe = 0;
 		}
 
 		public override System.Drawing.Bitmap GetBG()
@@ -35,6 +52,32 @@ namespace MHZ
 
 		public override void UpdateScrolling(short Camera_X_pos_diff, short Camera_Y_pos_diff)
 		{
+			if (fadeframe >= 0)
+			{
+				if (fadeframe == levelinfo.FadeLength)
+				{
+					curpal = (curpal + 1) % LevelData.Palette.Count;
+					int i = 0;
+					for (int y = 0; y < 4; y++)
+						for (int x = 0; x < 16; x++)
+							LevelData.BmpPal.Entries[i++] = LevelData.Palette[curpal][y, x].RGBColor;
+					fadeframe = -1;
+					paltimer.Start();
+				}
+				else
+				{
+					int i = 0;
+					int blendpal = (curpal + 1) % LevelData.Palette.Count;
+					double A = fadeframe++ / (double)levelinfo.FadeLength;
+					for (int y = 0; y < 4; y++)
+						for (int x = 0; x < 16; x++)
+						{
+							Color oldcolor = LevelData.Palette[curpal][y, x].RGBColor;
+							Color newcolor = LevelData.Palette[blendpal][y, x].RGBColor;
+							LevelData.BmpPal.Entries[i++] = Color.FromArgb((int)(((1 - A) * oldcolor.R) + (A * newcolor.R)), (int)(((1 - A) * oldcolor.G) + (A * newcolor.G)), (int)(((1 - A) * oldcolor.B) + (A * newcolor.B)));
+						}
+				}
+			}
 			Camera_X_pos += Camera_X_pos_diff;
 			Camera_Y_pos += Camera_Y_pos_diff;
 			BitmapBits bmp = new BitmapBits(levelimg.Width, levelimg.Height);
@@ -55,14 +98,20 @@ namespace MHZ
 
 		public override void PlayMusic()
 		{
-			SonicBGScrollSaver.Music.PlaySong(IniSerializer.Deserialize<MusicInfo>("setup.ini").Music);
+			SonicBGScrollSaver.Music.PlaySong(levelinfo.Music);
 		}
 	}
 
-	internal class MusicInfo
+	internal class LevelInfo
 	{
-		[System.ComponentModel.DefaultValue("MysticCave2P")]
+		[System.ComponentModel.DefaultValue("MushroomHill1")]
 		[IniName("music")]
 		public string Music { get; set; }
+		[System.ComponentModel.DefaultValue(30)]
+		[IniName("fadelen")]
+		public int FadeLength { get; set; }
+		[System.ComponentModel.TypeConverter(typeof(SonicBGScrollSaver.CustomTimeSpanConverter))]
+		[IniName("paltime")]
+		public TimeSpan? PaletteTime { get; set; }
 	}
 }
