@@ -64,9 +64,6 @@ namespace SonicBGScrollSaver
 			gfx = CreateGraphics();
 			gfx.SetOptions();
 			Environment.CurrentDirectory = Application.StartupPath;
-#if DEBUG
-			Environment.CurrentDirectory = Environment.CurrentDirectory.Replace("Debug", "Release");
-#endif
 			settings = Settings.Load();
 			if (!previewMode)
 			{
