@@ -31,6 +31,7 @@ namespace S2DEZ
 			Height = height;
 			LevelData.LoadGame("./setup.ini");
 			LevelData.LoadLevel("Level", true);
+			LevelData.BmpPal.Entries[0] = LevelData.Palette[0][2, 0].RGBColor;
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
 			Horiz_Scroll_Buf = new int[Math.Min(height, levelimg.Height)];
 			if (height > levelimg.Height)

@@ -22,6 +22,7 @@ namespace MHZ
 			levelinfo = IniSerializer.Deserialize<LevelInfo>("setup.ini");
 			LevelData.LoadGame("./setup.ini");
 			LevelData.LoadLevel("Level", true);
+			LevelData.BmpPal.Entries[0] = LevelData.Palette[0][2, 0].RGBColor;
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
 			layer1img = new BitmapBits("../layer1.png");
 			layer1img.IncrementIndexes(0x30);
@@ -68,6 +69,7 @@ namespace MHZ
 					for (int y = 0; y < 4; y++)
 						for (int x = 0; x < 16; x++)
 							LevelData.BmpPal.Entries[i++] = LevelData.Palette[curpal][y, x].RGBColor;
+					LevelData.BmpPal.Entries[0] = LevelData.Palette[curpal][2, 0].RGBColor;
 					fadeframe = -1;
 					paltimer.Start();
 				}
@@ -83,6 +85,7 @@ namespace MHZ
 							Color newcolor = LevelData.Palette[blendpal][y, x].RGBColor;
 							LevelData.BmpPal.Entries[i++] = Color.FromArgb((int)(((1 - A) * oldcolor.R) + (A * newcolor.R)), (int)(((1 - A) * oldcolor.G) + (A * newcolor.G)), (int)(((1 - A) * oldcolor.B) + (A * newcolor.B)));
 						}
+					LevelData.BmpPal.Entries[0] = LevelData.BmpPal.Entries[0x20];
 				}
 			}
 			Camera_X_pos += Camera_X_pos_diff;

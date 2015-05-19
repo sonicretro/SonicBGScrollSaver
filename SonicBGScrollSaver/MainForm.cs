@@ -116,7 +116,6 @@ namespace SonicBGScrollSaver
 			Environment.CurrentDirectory = levels[currentlevel].Key;
 			level = levels[currentlevel].Value;
 			level.Init(imageSize.Width, imageSize.Height);
-			BackColor = LevelData.Palette[0][2, 0].RGBColor;
 			if (previewMode)
 				DrawInvoker = DrawBackgroundPreview;
 			else

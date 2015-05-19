@@ -33,6 +33,7 @@ namespace EHZ
 			Height = height;
 			LevelData.LoadGame("./setup.ini");
 			LevelData.LoadLevel("Level", true);
+			LevelData.BmpPal.Entries[0] = LevelData.Palette[0][2, 0].RGBColor;
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
 			tmpimg = new BitmapBits(Math.Min(levelimg.Width, width), height);
 			tmpimg.Bits.FastFill(0x22);

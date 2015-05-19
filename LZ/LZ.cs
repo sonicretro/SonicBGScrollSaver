@@ -54,10 +54,12 @@ namespace LZ
 			Height = height;
 			LevelData.LoadGame("./setup.ini");
 			LevelData.LoadLevel("Level", true);
+			LevelData.BmpPal.Entries[0] = LevelData.Palette[0][2, 0].RGBColor;
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
 			for (int l = 0; l < 4; l++)
 				for (int i = 0; i < 16; i++)
 					LevelData.BmpPal.Entries[(l * 16) + i + 64] = LevelData.Palette[1][l, i].RGBColor;
+			LevelData.BmpPal.Entries[64] = LevelData.Palette[1][2, 0].RGBColor;
 			surfacesprites = new List<Sprite>();
 			byte[] art = Compression.Decompress("../LZ Water Surface.bin", CompressionType.Nemesis);
 			foreach (MappingsFrame frame in MappingsFrame.LoadASM("../Water Surface.asm", LevelData.Game.EngineVersion))
