@@ -31,9 +31,16 @@ namespace MHZ
 			if (height < levelimg.Height)
 				Camera_Y_pos += (short)((levelimg.Height / 2) - (height / 2));
 			Camera_X_pos = 0;
+			curpal = 0;
+			fadeframe = -1;
 			UpdateScrolling(0, 0);
 			if (LevelData.Palette.Count > 1)
 			{
+				if (paltimer != null)
+				{
+					paltimer.Stop();
+					paltimer.Dispose();
+				}
 				paltimer = new System.Timers.Timer((levelinfo.PaletteTime ?? TimeSpan.FromMinutes(1)).TotalMilliseconds);
 				paltimer.Elapsed += paltimer_Elapsed;
 				paltimer.Start();
