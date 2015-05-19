@@ -80,14 +80,16 @@ namespace MHZ
 			}
 			Camera_X_pos += Camera_X_pos_diff;
 			Camera_Y_pos += Camera_Y_pos_diff;
-			BitmapBits bmp = new BitmapBits(levelimg.Width, levelimg.Height);
-			for (int x = (int)(-Camera_X_pos * 0.5) % layer1img.Width; x < bmp.Width; x += layer1img.Width)
-				bmp.DrawBitmapBounded(layer1img, x, 0x1F0);
-			for (int x = (int)(-Camera_X_pos * 0.625) % layer2img.Width; x < bmp.Width; x += layer2img.Width)
-				bmp.DrawBitmapBounded(layer2img, x, 0x200);
-			BitmapBits tmp = new BitmapBits(levelimg);
-			tmp.ScrollHorizontal((int)(Camera_X_pos * 0.75));
-			bmp.DrawBitmapComposited(tmp, 0, 0);
+			BitmapBits bmp = new BitmapBits(levelimg);
+			bmp.ScrollHorizontal((int)(Camera_X_pos * 0.75));
+			BitmapBits tmp = new BitmapBits(layer1img);
+			tmp.ScrollHorizontal((int)(Camera_X_pos * 0.5));
+			for (int x = 0; x < bmp.Width; x += tmp.Width)
+				bmp.DrawBitmapBehind(tmp, x, 0x1F0);
+			tmp = new BitmapBits(layer2img);
+			tmp.ScrollHorizontal((int)(Camera_X_pos * 0.625));
+			for (int x = 0; x < bmp.Width; x += tmp.Width)
+				bmp.DrawBitmapBehind(tmp, x, 0x200);
 			if (Width < bmp.Width)
 				bmp = bmp.GetSection(0, 0, Width, bmp.Height);
 			bmp.ScrollVertical(Camera_Y_pos);
