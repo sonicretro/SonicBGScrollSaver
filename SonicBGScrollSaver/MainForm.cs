@@ -14,6 +14,7 @@ namespace SonicBGScrollSaver
 		bool previewMode;
 		Rectangle bounds;
 		Size imageSize;
+		double previewScale;
 
 		public MainForm()
 		{
@@ -40,11 +41,13 @@ namespace SonicBGScrollSaver
 			{
 				imageSize.Width = (int)(bounds.Width * ((double)scrnSize.Height / bounds.Height));
 				imageSize.Height = scrnSize.Height;
+				previewScale = (double)bounds.Height / scrnSize.Height;
 			}
 			else
 			{
 				imageSize.Width = scrnSize.Width;
 				imageSize.Height = (int)(bounds.Height * ((double)scrnSize.Width / bounds.Width));
+				previewScale = (double)bounds.Width / scrnSize.Width;
 			}
 			previewMode = true;
 		}
@@ -134,7 +137,8 @@ namespace SonicBGScrollSaver
 
 		void DrawBackgroundPreview()
 		{
-			BackgroundImage = new Bitmap(level.GetBG(), Width, Height);
+			Bitmap tmp = level.GetBG();
+			BackgroundImage = new Bitmap(tmp, (int)(tmp.Width * previewScale), (int)(tmp.Height * previewScale));
 		}
 
 		void SwitchTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
