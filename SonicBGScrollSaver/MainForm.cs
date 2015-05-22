@@ -25,13 +25,16 @@ namespace SonicBGScrollSaver
 			Cursor.Hide();
 		}
 
-		[DllImport("user32.dll")]
-		static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+		private static class NativeMethods
+		{
+			[DllImport("user32.dll")]
+			public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+		}
 
 		public MainForm(IntPtr previewWndHandle)
 		{
 			InitializeComponent();
-			SetParent(Handle, previewWndHandle);
+			NativeMethods.SetParent(Handle, previewWndHandle);
 			ManagedWinapi.Windows.SystemWindow wnd = new ManagedWinapi.Windows.SystemWindow(this);
 			wnd.Style |= ManagedWinapi.Windows.WindowStyleFlags.CHILD;
 			wnd = new ManagedWinapi.Windows.SystemWindow(previewWndHandle);

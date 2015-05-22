@@ -10,26 +10,27 @@ namespace SonicBGScrollSaver
 {
 	public static class Music
 	{
-		#region Native Methods
-		[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
-		static extern bool InitializeDriver();
-		[DllImport("SMPSOUT", ExactSpelling = true, EntryPoint="PlaySong", CharSet = CharSet.Auto)]
-		static extern bool PlaySongNative(short song);
-		[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
-		internal static extern bool StopSong();
-		[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
-		internal static extern bool FadeOutSong();
-		[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
-		internal static extern bool PauseSong();
-		[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
-		internal static extern bool ResumeSong();
-		[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
-		internal static extern bool SetSongTempoSong(int pct);
-		[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
-		static unsafe extern IntPtr *GetCustomSongs(out uint count);
-		[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
-		internal static extern void SetVolume(double volume);
-		#endregion
+		private static class NativeMethods
+		{
+			[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
+			public static extern bool InitializeDriver();
+			[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
+			public static extern bool PlaySong(short song);
+			[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
+			public static extern bool StopSong();
+			[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
+			public static extern bool FadeOutSong();
+			[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
+			public static extern bool PauseSong();
+			[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
+			public static extern bool ResumeSong();
+			[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
+			public static extern bool SetSongTempo(int pct);
+			[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
+			public static unsafe extern IntPtr* GetCustomSongs(out uint count);
+			[DllImport("SMPSOUT", ExactSpelling = true, CharSet = CharSet.Auto)]
+			public static extern void SetVolume(double volume);
+		}
 
 		static bool initsuccess;
 		static Dictionary<string, short> songNums = new Dictionary<string, short>(StringComparer.OrdinalIgnoreCase);
@@ -47,16 +48,16 @@ namespace SonicBGScrollSaver
 				songNums.Add(song, songCount++);
 			string dir = Environment.CurrentDirectory;
 			Environment.CurrentDirectory = Path.Combine(Environment.CurrentDirectory, "lib" + (IntPtr.Size == 8 ? "64" : "32"));
-			try { SetVolume(1); }
+			try { NativeMethods.SetVolume(1); }
 			catch
 			{
 				Environment.CurrentDirectory = dir;
 				return;
 			}
 			Environment.CurrentDirectory = dir;
-			InitializeDriver();
+			NativeMethods.InitializeDriver();
 			uint custcnt;
-			IntPtr* p = GetCustomSongs(out custcnt);
+			IntPtr* p = NativeMethods.GetCustomSongs(out custcnt);
 			for (uint i = 0; i < custcnt; i++)
 			{
 				string song = Marshal.PtrToStringAnsi(*(p++));
@@ -67,8 +68,20 @@ namespace SonicBGScrollSaver
 
 		public static void PlaySong(string name)
 		{
-			if (!initsuccess || !songNums.ContainsKey(name)) return;
-			PlaySongNative(songNums[name]);
+			if (initsuccess && songNums.ContainsKey(name))
+				NativeMethods.PlaySong(songNums[name]);
+		}
+
+		public static void StopSong()
+		{
+			if (initsuccess)
+				NativeMethods.StopSong();
+		}
+
+		public static void SetVolume(double volume)
+		{
+			if (initsuccess)
+				NativeMethods.SetVolume(volume);
 		}
 	}
 
