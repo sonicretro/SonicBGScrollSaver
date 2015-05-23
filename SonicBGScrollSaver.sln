@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GHZ", "GHZ\GHZ.csproj", "{3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MZ", "MZ\MZ.csproj", "{7FE38515-5B1D-4526-86ED-3E144C96745F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SYZ", "SYZ\SYZ.csproj", "{9FBC0213-1EDF-48D1-B539-63A78F0A662A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{7FE38515-5B1D-4526-86ED-3E144C96745F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FE38515-5B1D-4526-86ED-3E144C96745F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FE38515-5B1D-4526-86ED-3E144C96745F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FBC0213-1EDF-48D1-B539-63A78F0A662A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FBC0213-1EDF-48D1-B539-63A78F0A662A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FBC0213-1EDF-48D1-B539-63A78F0A662A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FBC0213-1EDF-48D1-B539-63A78F0A662A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
