@@ -30,7 +30,7 @@ namespace GHZ
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
 			tmpimg = new BitmapBits(Math.Min(levelimg.Width, width), height);
 			tmpimg.Bits.FastFill(0x31);
-			Pal_GHZCyc = SonLVLColor.Load("Cycle - GHZ.bin", EngineVersion.S1).Select(a => a.RGBColor).ToArray();
+			Pal_GHZCyc = SonLVLColor.Load("palcycle.bin", EngineVersion.S1).Select(a => a.RGBColor).ToArray();
 			Horiz_Scroll_Buf = new int[levelimg.Height];
 			Camera_X_pos = 0;
 			Array.Clear(CloudScroll, 0, CloudScroll.Length);
