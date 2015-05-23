@@ -67,32 +67,38 @@ namespace SonicBGScrollSaver
 
 		private void levelsListView_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (levelsCheckedListBox.SelectedIndices.Count == 0)
+			if (levelsCheckedListBox.SelectedIndex == -1)
 				levelUpButton.Enabled = levelDownButton.Enabled = false;
 			else
 			{
-				levelUpButton.Enabled = levelsCheckedListBox.SelectedIndices[0] > 0;
-				levelDownButton.Enabled = levelsCheckedListBox.SelectedIndices[0] < levelsCheckedListBox.Items.Count - 1;
+				levelUpButton.Enabled = levelsCheckedListBox.SelectedIndex > 0;
+				levelDownButton.Enabled = levelsCheckedListBox.SelectedIndex < levelsCheckedListBox.Items.Count - 1;
 			}
 		}
 
 		private void levelUpButton_Click(object sender, EventArgs e)
 		{
-			int i = levelsCheckedListBox.SelectedIndices[0];
-			object item = levelsCheckedListBox.Items[i];
+			int i = levelsCheckedListBox.SelectedIndex;
+			object item = levelsCheckedListBox.SelectedItem;
+			bool check = levelsCheckedListBox.GetItemChecked(i);
 			levelsCheckedListBox.BeginUpdate();
 			levelsCheckedListBox.Items.Remove(item);
 			levelsCheckedListBox.Items.Insert(i - 1, item);
+			levelsCheckedListBox.SetItemChecked(i - 1, check);
+			levelsCheckedListBox.SelectedIndex = i - 1;
 			levelsCheckedListBox.EndUpdate();
 		}
 
 		private void levelDownButton_Click(object sender, EventArgs e)
 		{
-			int i = levelsCheckedListBox.SelectedIndices[0];
-			object item = levelsCheckedListBox.Items[i];
+			int i = levelsCheckedListBox.SelectedIndex;
+			object item = levelsCheckedListBox.SelectedItem;
+			bool check = levelsCheckedListBox.GetItemChecked(i);
 			levelsCheckedListBox.BeginUpdate();
 			levelsCheckedListBox.Items.Remove(item);
 			levelsCheckedListBox.Items.Insert(i + 1, item);
+			levelsCheckedListBox.SetItemChecked(i + 1, check);
+			levelsCheckedListBox.SelectedIndex = i + 1;
 			levelsCheckedListBox.EndUpdate();
 		}
 
