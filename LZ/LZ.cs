@@ -17,7 +17,8 @@ namespace LZ
 		BitmapBits levelimg;
 		Bitmap bgimg = new Bitmap(1, 1);
 		int Width, Height;
-		bool water;
+		LevelInfo levelinfo;
+		WaterMode waterMode;
 		int waterheight;
 		List<Sprite> surfacesprites;
 		sbyte surfacetimer;
@@ -52,6 +53,7 @@ namespace LZ
 		{
 			Width = width;
 			Height = height;
+			levelinfo = IniSerializer.Deserialize<LevelInfo>("setup.ini");
 			LevelData.LoadGame("./setup.ini");
 			LevelData.LoadLevel("Level", true);
 			LevelData.BmpPal.Entries[0] = LevelData.Palette[0][2, 0].RGBColor;
@@ -66,7 +68,7 @@ namespace LZ
 				surfacesprites.Add(new Sprite(LevelData.MapFrameToBmp(art, frame, 2)));
 			Horiz_Scroll_Buf = new int[height];
 			waterheight = height / 2;
-			water = true;
+			waterMode = levelinfo.WaterMode;
 			oscVal = 0x80;
 			oscRate = 0;
 			Camera_BG_X_pos = 0;
@@ -89,7 +91,7 @@ namespace LZ
 				bmp.ScrollVertical(Camera_BG_Y_pos);
 				if (Height < bmp.Height)
 					bmp = bmp.GetSection(0, 0, bmp.Width, Height);
-				else if (Height > bmp.Height && water)
+				else if (Height > bmp.Height && waterMode != WaterMode.None)
 				{
 					BitmapBits tmpbmp = new BitmapBits(bmp.Width, Height);
 					for (int i = 0; i < tmpbmp.Bits.Length; i += bmp.Bits.Length)
@@ -115,9 +117,11 @@ namespace LZ
 				}
 				byte d2 = LZ_Water_Ripple.b1;
 				LZ_Water_Ripple.w += 0x80;
-				if (water)
+				if (waterMode != WaterMode.None)
 				{
-					int screenwater = waterheight - Camera_BG_Y_pos + (oscVal.b1 >> 1);
+					int screenwater = 0;
+					if (waterMode == WaterMode.Partial)
+						screenwater = waterheight - Camera_BG_Y_pos + (oscVal.b1 >> 1);
 					if (screenwater > 0)
 						Horiz_Scroll_Buf.FastFill(Camera_BG_X_pos.hsw, 0, Math.Min(screenwater, bmp.Height));
 					d2 = (byte)(d2 + screenwater);
@@ -126,17 +130,20 @@ namespace LZ
 					bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
 					if (Width < bmp.Width)
 						bmp = bmp.GetSection(0, 0, Width, bmp.Height);
-					int surfx = -(Camera_BG_X_pos.hsw % 0x20) + 0x60;
-					if (shiftsurface)
-						surfx += 0x20;
-					shiftsurface = !shiftsurface;
-					if (--surfacetimer < 0)
+					if (waterMode == WaterMode.Partial)
 					{
-						surfacetimer = 7;
-						surfaceframe = (byte)((surfaceframe + 1) % 3);
+						int surfx = -(Camera_BG_X_pos.hsw % 0x20) + 0x60;
+						if (shiftsurface)
+							surfx += 0x20;
+						shiftsurface = !shiftsurface;
+						if (--surfacetimer < 0)
+						{
+							surfacetimer = 7;
+							surfaceframe = (byte)((surfaceframe + 1) % 3);
+						}
+						for (int i = 0; i < bmp.Width; i += 0xC0)
+							bmp.DrawSprite(surfacesprites[surfaceframe], surfx + i, screenwater);
 					}
-					for (int i = 0; i < bmp.Width; i += 0xC0)
-						bmp.DrawSprite(surfacesprites[surfaceframe], surfx + i, screenwater);
 					if (screenwater < Height)
 						bmp.ApplyWaterPalette(Math.Max(screenwater, 0));
 				}
@@ -152,12 +159,23 @@ namespace LZ
 
 		public override void PlayMusic()
 		{
-			SonicBGScrollSaver.Music.PlaySong(IniSerializer.Deserialize<MusicInfo>("setup.ini").Music);
+			SonicBGScrollSaver.Music.PlaySong(levelinfo.Music);
 		}
 
 		public override void ToggleWater()
 		{
-			water = !water;
+			switch (waterMode)
+			{
+				case WaterMode.None:
+					waterMode = WaterMode.Partial;
+					break;
+				case WaterMode.Partial:
+					waterMode = WaterMode.Full;
+					break;
+				case WaterMode.Full:
+					waterMode = WaterMode.None;
+					break;
+			}
 		}
 	}
 
@@ -309,10 +327,20 @@ namespace LZ
 		}
 	}
 
-	internal class MusicInfo
+	internal class LevelInfo
 	{
 		[System.ComponentModel.DefaultValue("Labyrinth")]
 		[IniName("music")]
 		public string Music { get; set; }
+		[System.ComponentModel.DefaultValue(WaterMode.Partial)]
+		[IniName("water")]
+		public WaterMode WaterMode { get; set; }
+	}
+
+	public enum WaterMode
+	{
+		None,
+		Partial,
+		Full
 	}
 }
