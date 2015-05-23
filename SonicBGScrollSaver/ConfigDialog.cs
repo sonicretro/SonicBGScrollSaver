@@ -8,6 +8,23 @@ namespace SonicBGScrollSaver
 {
 	public partial class ConfigDialog : Form
 	{
+		class LevelKeyValue
+		{
+			public string Key { get; set; }
+			public string Value { get; set; }
+
+			public LevelKeyValue(string key, string value)
+			{
+				Key = key;
+				Value = value;
+			}
+
+			public override string ToString()
+			{
+				return Value;
+			}
+		}
+
 		public ConfigDialog()
 		{
 			InitializeComponent();
@@ -26,14 +43,14 @@ namespace SonicBGScrollSaver
 			Dictionary<string, LevelInfo> levels = new Dictionary<string, LevelInfo>();
 			foreach (string filename in Directory.GetFiles(Environment.CurrentDirectory, "setup.ini", SearchOption.AllDirectories))
 				levels.Add(Path.GetDirectoryName(filename).Substring(Environment.CurrentDirectory.Length + 1), IniSerializer.Deserialize<LevelInfo>(filename));
-			levelsListView.BeginUpdate();
+			levelsCheckedListBox.BeginUpdate();
 			if (settings.Levels == null)
 				settings.Levels = new List<string>();
 			foreach (string level in new List<string>(settings.Levels))
 				if (levels.ContainsKey(level))
 				{
 					LevelInfo inf = levels[level];
-					levelsListView.Items.Add(new ListViewItem(inf.Name) { Tag = level, Checked = true });
+					levelsCheckedListBox.Items.Add(new LevelKeyValue(level, inf.Name), true);
 				}
 				else
 				{
@@ -42,41 +59,41 @@ namespace SonicBGScrollSaver
 				}
 			foreach (KeyValuePair<string, LevelInfo> inf in levels)
 				if (!settings.Levels.Contains(inf.Key))
-					levelsListView.Items.Add(new ListViewItem(inf.Value.Name) { Tag = inf.Key });
-			levelsListView.EndUpdate();
+					levelsCheckedListBox.Items.Add(new LevelKeyValue(inf.Key, inf.Value.Name));
+			levelsCheckedListBox.EndUpdate();
 			shuffleCheckBox.Checked = settings.Shuffle;
 			displayTimeHourControl.TimeSpan = settings.DisplayTime;
 		}
 
 		private void levelsListView_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (levelsListView.SelectedIndices.Count == 0)
+			if (levelsCheckedListBox.SelectedIndices.Count == 0)
 				levelUpButton.Enabled = levelDownButton.Enabled = false;
 			else
 			{
-				levelUpButton.Enabled = levelsListView.SelectedIndices[0] > 0;
-				levelDownButton.Enabled = levelsListView.SelectedIndices[0] < levelsListView.Items.Count - 1;
+				levelUpButton.Enabled = levelsCheckedListBox.SelectedIndices[0] > 0;
+				levelDownButton.Enabled = levelsCheckedListBox.SelectedIndices[0] < levelsCheckedListBox.Items.Count - 1;
 			}
 		}
 
 		private void levelUpButton_Click(object sender, EventArgs e)
 		{
-			int i = levelsListView.SelectedIndices[0];
-			ListViewItem item = levelsListView.Items[i];
-			levelsListView.BeginUpdate();
-			levelsListView.Items.Remove(item);
-			levelsListView.Items.Insert(i - 1, item);
-			levelsListView.EndUpdate();
+			int i = levelsCheckedListBox.SelectedIndices[0];
+			object item = levelsCheckedListBox.Items[i];
+			levelsCheckedListBox.BeginUpdate();
+			levelsCheckedListBox.Items.Remove(item);
+			levelsCheckedListBox.Items.Insert(i - 1, item);
+			levelsCheckedListBox.EndUpdate();
 		}
 
 		private void levelDownButton_Click(object sender, EventArgs e)
 		{
-			int i = levelsListView.SelectedIndices[0];
-			ListViewItem item = levelsListView.Items[i];
-			levelsListView.BeginUpdate();
-			levelsListView.Items.Remove(item);
-			levelsListView.Items.Insert(i + 1, item);
-			levelsListView.EndUpdate();
+			int i = levelsCheckedListBox.SelectedIndices[0];
+			object item = levelsCheckedListBox.Items[i];
+			levelsCheckedListBox.BeginUpdate();
+			levelsCheckedListBox.Items.Remove(item);
+			levelsCheckedListBox.Items.Insert(i + 1, item);
+			levelsCheckedListBox.EndUpdate();
 		}
 
 		private void okButton_Click(object sender, EventArgs e)
@@ -86,8 +103,8 @@ namespace SonicBGScrollSaver
 			settings.FramesPerSecond = (byte)framesPerSecondNumericUpDown.Value;
 			settings.ScrollSpeed = (short)scrollSpeedNumericUpDown.Value;
 			settings.Levels.Clear();
-			foreach (ListViewItem item in levelsListView.CheckedItems)
-				settings.Levels.Add((string)item.Tag);
+			foreach (LevelKeyValue item in levelsCheckedListBox.CheckedItems)
+				settings.Levels.Add(item.Key);
 			settings.Shuffle = shuffleCheckBox.Checked;
 			settings.DisplayTime = displayTimeHourControl.TimeSpan;
 			settings.Save();

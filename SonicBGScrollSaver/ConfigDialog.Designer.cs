@@ -38,7 +38,7 @@
 			this.musicVolumeNumericUpDown = new System.Windows.Forms.NumericUpDown();
 			this.framesPerSecondNumericUpDown = new System.Windows.Forms.NumericUpDown();
 			this.scrollSpeedNumericUpDown = new System.Windows.Forms.NumericUpDown();
-			this.levelsListView = new System.Windows.Forms.ListView();
+			this.levelsCheckedListBox = new System.Windows.Forms.CheckedListBox();
 			this.shuffleCheckBox = new System.Windows.Forms.CheckBox();
 			this.levelUpButton = new System.Windows.Forms.Button();
 			this.levelDownButton = new System.Windows.Forms.Button();
@@ -85,7 +85,7 @@
 			// label4
 			// 
 			label4.AutoSize = true;
-			label4.Location = new System.Drawing.Point(12, 338);
+			label4.Location = new System.Drawing.Point(12, 369);
 			label4.Name = "label4";
 			label4.Size = new System.Drawing.Size(70, 13);
 			label4.TabIndex = 12;
@@ -103,7 +103,7 @@
 			// okButton
 			// 
 			okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-			okButton.Location = new System.Drawing.Point(137, 365);
+			okButton.Location = new System.Drawing.Point(137, 396);
 			okButton.Name = "okButton";
 			okButton.Size = new System.Drawing.Size(75, 23);
 			okButton.TabIndex = 14;
@@ -187,23 +187,18 @@
             0,
             0});
 			// 
-			// levelsListView
+			// levelsCheckedListBox
 			// 
-			this.levelsListView.CheckBoxes = true;
-			this.levelsListView.FullRowSelect = true;
-			this.levelsListView.Location = new System.Drawing.Point(62, 113);
-			this.levelsListView.MultiSelect = false;
-			this.levelsListView.Name = "levelsListView";
-			this.levelsListView.Size = new System.Drawing.Size(166, 214);
-			this.levelsListView.TabIndex = 8;
-			this.levelsListView.UseCompatibleStateImageBehavior = false;
-			this.levelsListView.View = System.Windows.Forms.View.List;
-			this.levelsListView.SelectedIndexChanged += new System.EventHandler(this.levelsListView_SelectedIndexChanged);
+			this.levelsCheckedListBox.Location = new System.Drawing.Point(12, 129);
+			this.levelsCheckedListBox.Name = "levelsCheckedListBox";
+			this.levelsCheckedListBox.Size = new System.Drawing.Size(216, 229);
+			this.levelsCheckedListBox.TabIndex = 8;
+			this.levelsCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.levelsListView_SelectedIndexChanged);
 			// 
 			// shuffleCheckBox
 			// 
 			this.shuffleCheckBox.AutoSize = true;
-			this.shuffleCheckBox.Location = new System.Drawing.Point(234, 171);
+			this.shuffleCheckBox.Location = new System.Drawing.Point(234, 188);
 			this.shuffleCheckBox.Name = "shuffleCheckBox";
 			this.shuffleCheckBox.Size = new System.Drawing.Size(59, 17);
 			this.shuffleCheckBox.TabIndex = 11;
@@ -216,7 +211,7 @@
 			this.levelUpButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.levelUpButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.levelUpButton.Enabled = false;
-			this.levelUpButton.Location = new System.Drawing.Point(234, 113);
+			this.levelUpButton.Location = new System.Drawing.Point(234, 130);
 			this.levelUpButton.Name = "levelUpButton";
 			this.levelUpButton.Size = new System.Drawing.Size(29, 23);
 			this.levelUpButton.TabIndex = 9;
@@ -230,7 +225,7 @@
 			this.levelDownButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.levelDownButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.levelDownButton.Enabled = false;
-			this.levelDownButton.Location = new System.Drawing.Point(234, 142);
+			this.levelDownButton.Location = new System.Drawing.Point(234, 159);
 			this.levelDownButton.Name = "levelDownButton";
 			this.levelDownButton.Size = new System.Drawing.Size(29, 23);
 			this.levelDownButton.TabIndex = 10;
@@ -241,7 +236,7 @@
 			// cancelButton
 			// 
 			this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancelButton.Location = new System.Drawing.Point(218, 365);
+			this.cancelButton.Location = new System.Drawing.Point(218, 396);
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 15;
@@ -255,7 +250,7 @@
 			this.displayTimeHourControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.displayTimeHourControl.Centiseconds = 0;
 			this.displayTimeHourControl.Hours = 0;
-			this.displayTimeHourControl.Location = new System.Drawing.Point(88, 333);
+			this.displayTimeHourControl.Location = new System.Drawing.Point(88, 364);
 			this.displayTimeHourControl.Minutes = 5;
 			this.displayTimeHourControl.Name = "displayTimeHourControl";
 			this.displayTimeHourControl.Seconds = 0;
@@ -271,13 +266,13 @@
 			this.AutoSize = true;
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.CancelButton = this.cancelButton;
-			this.ClientSize = new System.Drawing.Size(305, 400);
+			this.ClientSize = new System.Drawing.Size(305, 431);
 			this.Controls.Add(this.cancelButton);
 			this.Controls.Add(okButton);
 			this.Controls.Add(this.levelDownButton);
 			this.Controls.Add(this.levelUpButton);
 			this.Controls.Add(this.shuffleCheckBox);
-			this.Controls.Add(this.levelsListView);
+			this.Controls.Add(this.levelsCheckedListBox);
 			this.Controls.Add(label5);
 			this.Controls.Add(this.displayTimeHourControl);
 			this.Controls.Add(label4);
@@ -309,7 +304,7 @@
 		private System.Windows.Forms.NumericUpDown framesPerSecondNumericUpDown;
 		private System.Windows.Forms.NumericUpDown scrollSpeedNumericUpDown;
 		private HourControl displayTimeHourControl;
-		private System.Windows.Forms.ListView levelsListView;
+		private System.Windows.Forms.CheckedListBox levelsCheckedListBox;
 		private System.Windows.Forms.CheckBox shuffleCheckBox;
 		private System.Windows.Forms.Button levelUpButton;
 		private System.Windows.Forms.Button levelDownButton;
