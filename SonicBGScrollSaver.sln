@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLZ", "SLZ\SLZ.csproj", "{5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SBZ1", "SBZ1\SBZ1.csproj", "{2633D8CD-45CC-4CE3-85B4-EDB1B4A313D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SBZ2", "SBZ2\SBZ2.csproj", "{A16DA6BB-6797-4357-9846-E43F160605E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{2633D8CD-45CC-4CE3-85B4-EDB1B4A313D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2633D8CD-45CC-4CE3-85B4-EDB1B4A313D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2633D8CD-45CC-4CE3-85B4-EDB1B4A313D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A16DA6BB-6797-4357-9846-E43F160605E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A16DA6BB-6797-4357-9846-E43F160605E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A16DA6BB-6797-4357-9846-E43F160605E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A16DA6BB-6797-4357-9846-E43F160605E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
