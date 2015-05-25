@@ -60,7 +60,6 @@ namespace GHZ
 				d4 = (int)Camera_X_pos_diff << 8;
 				d4.sl <<= 7;
 				Camera_BG2_X_pos.l += d4.l;
-				BitmapBits bmp = new BitmapBits(levelimg);
 				int a1 = 0;
 				int a2 = 0;
 				CloudScroll[a2++].l += 0x10000;
@@ -91,17 +90,14 @@ namespace GHZ
 				d2.ExtendL();
 				d2.sl <<= 8;
 				BWL d3 = d0.w;
-				while (a1 < bmp.Height)
+				while (a1 < levelimg.Height)
 				{
 					Horiz_Scroll_Buf[a1++] = d3.sw;
 					d3.Swap();
 					d3.l += d2.l;
 					d3.Swap();
 				}
-				bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
-				if (Width < bmp.Width)
-					bmp = bmp.GetSection(0, 0, Width, bmp.Height);
-				tmpimg.DrawBitmapBounded(bmp, 0, tmpimg.Height - bmp.Height);
+				levelimg.ScrollHV(tmpimg, tmpimg.Height - levelimg.Height, 0, Horiz_Scroll_Buf);
 				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}
