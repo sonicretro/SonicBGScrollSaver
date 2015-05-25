@@ -74,10 +74,6 @@ namespace MZ
 				d4 = (int)(Camera_X_pos_diff << 8);
 				d4.sl <<= 7;
 				Camera_BG2_X_pos.l += d4.l;
-				BitmapBits bmp = new BitmapBits(levelimg[AnimFrame]);
-				bmp.ScrollVertical(Camera_Y_pos);
-				if (Height < bmp.Height)
-					bmp = bmp.GetSection(0, 0, bmp.Width, Height);
 				int a1 = 0;
 				BWL d2 = Camera_X_pos;
 				BWL d0 = d2.sw >> 2;
@@ -109,16 +105,13 @@ namespace MZ
 				a1 = 0;
 				d2.w &= 0xF;
 				d2.w = (ushort)(16 - d2.w);
-				while (a1 < bmp.Height)
+				while (a1 < levelimg[AnimFrame].Height)
 				{
 					Horiz_Scroll_Buf.FastFill(TempArray_LayerDef[a2++], a1, d2.w);
 					a1 += d2.w;
-					d2.w = (ushort)Math.Min(16, bmp.Height - a1);
+					d2.w = (ushort)Math.Min(16, levelimg[AnimFrame].Height - a1);
 				}
-				bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
-				if (Width < bmp.Width)
-					bmp = bmp.GetSection(0, 0, Width, bmp.Height);
-				tmpimg.DrawBitmapBounded(bmp, 0, tmpimg.Height - bmp.Height);
+				levelimg[AnimFrame].ScrollHV(tmpimg, 0, Camera_Y_pos, Horiz_Scroll_Buf);
 				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}
