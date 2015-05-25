@@ -183,7 +183,7 @@ namespace SonicBGScrollSaver
 				vscrollspeed = 0;
 				Invoke(DrawInvoker);
 				while (sw.ElapsedMilliseconds < frameTime)
-					Thread.Sleep(Math.Max((int)(frameTime - sw.ElapsedMilliseconds) - 1, 0));
+					Thread.Sleep(1);
 				sw.Reset();
 			}
 		}
