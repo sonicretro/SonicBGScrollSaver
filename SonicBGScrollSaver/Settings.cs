@@ -17,6 +17,7 @@ namespace SonicBGScrollSaver
 		public int MusicVolume { get; set; }
 		[DefaultValue(30)]
 		public byte FramesPerSecond { get; set; }
+		public bool FpsCounter { get; set; }
 		[DefaultValue(8)]
 		public short ScrollSpeed { get; set; }
 		[TypeConverter(typeof(CustomTimeSpanConverter))]

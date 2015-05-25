@@ -64,6 +64,7 @@ namespace SonicBGScrollSaver
 		List<KeyValuePair<string, Level>> levels = new List<KeyValuePair<string, Level>>();
 		int currentlevel = -1;
 		bool playMusic;
+		Queue<DateTime> frametimes;
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
@@ -76,9 +77,11 @@ namespace SonicBGScrollSaver
 				Music.Init();
 				if (settings.MusicVolume != 100)
 					Music.SetVolume(settings.MusicVolume / 100d);
+				fpsLabel.Visible = settings.FpsCounter;
 			}
 			playMusic = settings.PlayMusic;
 			FrameTimer.Interval = 1 / (double)Math.Max(Math.Min((int)settings.FramesPerSecond, 60), 1) * 1000;
+			frametimes = new Queue<DateTime>(settings.FramesPerSecond * 5);
 			hscrollspeed = settings.ScrollSpeed;
 			SwitchTimer.Interval = settings.DisplayTime.TotalMilliseconds;
 			foreach (string item in settings.Levels ?? System.Linq.Enumerable.Empty<string>())
@@ -136,6 +139,15 @@ namespace SonicBGScrollSaver
 		void DrawBackground()
 		{
 			BackgroundImage = level.GetBG();
+			if (settings.FpsCounter)
+			{
+				DateTime now = DateTime.Now;
+				if (frametimes.Count > 0)
+					fpsLabel.Text = "FPS: " + (frametimes.Count / (now - frametimes.Peek()).TotalSeconds).ToString("0.###");
+				if (frametimes.Count == settings.FramesPerSecond * 5)
+					frametimes.Dequeue();
+				frametimes.Enqueue(now);
+			}
 		}
 
 		void DrawBackgroundPreview()

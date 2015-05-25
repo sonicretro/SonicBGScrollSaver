@@ -39,6 +39,7 @@ namespace SonicBGScrollSaver
 			playMusicCheckBox.Checked = settings.PlayMusic;
 			musicVolumeNumericUpDown.Value = settings.MusicVolume;
 			framesPerSecondNumericUpDown.Value = settings.FramesPerSecond;
+			fpsCounterCheckBox.Checked = settings.FpsCounter;
 			scrollSpeedNumericUpDown.Value = settings.ScrollSpeed;
 			Dictionary<string, LevelInfo> levels = new Dictionary<string, LevelInfo>();
 			foreach (string filename in Directory.GetFiles(Environment.CurrentDirectory, "setup.ini", SearchOption.AllDirectories))
@@ -107,6 +108,7 @@ namespace SonicBGScrollSaver
 			settings.PlayMusic = playMusicCheckBox.Checked;
 			settings.MusicVolume = (int)musicVolumeNumericUpDown.Value;
 			settings.FramesPerSecond = (byte)framesPerSecondNumericUpDown.Value;
+			settings.FpsCounter = fpsCounterCheckBox.Checked;
 			settings.ScrollSpeed = (short)scrollSpeedNumericUpDown.Value;
 			settings.Levels.Clear();
 			foreach (LevelKeyValue item in levelsCheckedListBox.CheckedItems)

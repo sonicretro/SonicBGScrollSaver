@@ -44,6 +44,7 @@
 			this.levelDownButton = new System.Windows.Forms.Button();
 			this.cancelButton = new System.Windows.Forms.Button();
 			this.displayTimeHourControl = new SonicBGScrollSaver.HourControl();
+			this.fpsCounterCheckBox = new System.Windows.Forms.CheckBox();
 			label1 = new System.Windows.Forms.Label();
 			label2 = new System.Windows.Forms.Label();
 			label3 = new System.Windows.Forms.Label();
@@ -79,7 +80,7 @@
 			label3.Location = new System.Drawing.Point(12, 89);
 			label3.Name = "label3";
 			label3.Size = new System.Drawing.Size(70, 13);
-			label3.TabIndex = 5;
+			label3.TabIndex = 6;
 			label3.Text = "Scroll Speed:";
 			// 
 			// label4
@@ -88,7 +89,7 @@
 			label4.Location = new System.Drawing.Point(12, 369);
 			label4.Name = "label4";
 			label4.Size = new System.Drawing.Size(70, 13);
-			label4.TabIndex = 12;
+			label4.TabIndex = 13;
 			label4.Text = "Display Time:";
 			// 
 			// label5
@@ -97,7 +98,7 @@
 			label5.Location = new System.Drawing.Point(12, 113);
 			label5.Name = "label5";
 			label5.Size = new System.Drawing.Size(41, 13);
-			label5.TabIndex = 7;
+			label5.TabIndex = 8;
 			label5.Text = "Levels:";
 			// 
 			// okButton
@@ -106,7 +107,7 @@
 			okButton.Location = new System.Drawing.Point(137, 396);
 			okButton.Name = "okButton";
 			okButton.Size = new System.Drawing.Size(75, 23);
-			okButton.TabIndex = 14;
+			okButton.TabIndex = 15;
 			okButton.Text = "&OK";
 			okButton.UseVisualStyleBackColor = true;
 			okButton.Click += new System.EventHandler(this.okButton_Click);
@@ -180,7 +181,7 @@
             -2147483648});
 			this.scrollSpeedNumericUpDown.Name = "scrollSpeedNumericUpDown";
 			this.scrollSpeedNumericUpDown.Size = new System.Drawing.Size(44, 20);
-			this.scrollSpeedNumericUpDown.TabIndex = 6;
+			this.scrollSpeedNumericUpDown.TabIndex = 7;
 			this.scrollSpeedNumericUpDown.Value = new decimal(new int[] {
             8,
             0,
@@ -192,7 +193,7 @@
 			this.levelsCheckedListBox.Location = new System.Drawing.Point(12, 129);
 			this.levelsCheckedListBox.Name = "levelsCheckedListBox";
 			this.levelsCheckedListBox.Size = new System.Drawing.Size(216, 229);
-			this.levelsCheckedListBox.TabIndex = 8;
+			this.levelsCheckedListBox.TabIndex = 9;
 			this.levelsCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.levelsListView_SelectedIndexChanged);
 			// 
 			// shuffleCheckBox
@@ -201,7 +202,7 @@
 			this.shuffleCheckBox.Location = new System.Drawing.Point(234, 188);
 			this.shuffleCheckBox.Name = "shuffleCheckBox";
 			this.shuffleCheckBox.Size = new System.Drawing.Size(59, 17);
-			this.shuffleCheckBox.TabIndex = 11;
+			this.shuffleCheckBox.TabIndex = 12;
 			this.shuffleCheckBox.Text = "Shuffle";
 			this.shuffleCheckBox.UseVisualStyleBackColor = true;
 			// 
@@ -214,7 +215,7 @@
 			this.levelUpButton.Location = new System.Drawing.Point(234, 130);
 			this.levelUpButton.Name = "levelUpButton";
 			this.levelUpButton.Size = new System.Drawing.Size(29, 23);
-			this.levelUpButton.TabIndex = 9;
+			this.levelUpButton.TabIndex = 10;
 			this.levelUpButton.Text = "↑";
 			this.levelUpButton.UseVisualStyleBackColor = true;
 			this.levelUpButton.Click += new System.EventHandler(this.levelUpButton_Click);
@@ -228,7 +229,7 @@
 			this.levelDownButton.Location = new System.Drawing.Point(234, 159);
 			this.levelDownButton.Name = "levelDownButton";
 			this.levelDownButton.Size = new System.Drawing.Size(29, 23);
-			this.levelDownButton.TabIndex = 10;
+			this.levelDownButton.TabIndex = 11;
 			this.levelDownButton.Text = "↓";
 			this.levelDownButton.UseVisualStyleBackColor = true;
 			this.levelDownButton.Click += new System.EventHandler(this.levelDownButton_Click);
@@ -239,7 +240,7 @@
 			this.cancelButton.Location = new System.Drawing.Point(218, 396);
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
-			this.cancelButton.TabIndex = 15;
+			this.cancelButton.TabIndex = 16;
 			this.cancelButton.Text = "&Cancel";
 			this.cancelButton.UseVisualStyleBackColor = true;
 			this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
@@ -255,8 +256,18 @@
 			this.displayTimeHourControl.Name = "displayTimeHourControl";
 			this.displayTimeHourControl.Seconds = 0;
 			this.displayTimeHourControl.Size = new System.Drawing.Size(205, 26);
-			this.displayTimeHourControl.TabIndex = 13;
+			this.displayTimeHourControl.TabIndex = 14;
 			this.displayTimeHourControl.TimeSpan = System.TimeSpan.Parse("00:05:00");
+			// 
+			// fpsCounterCheckBox
+			// 
+			this.fpsCounterCheckBox.AutoSize = true;
+			this.fpsCounterCheckBox.Location = new System.Drawing.Point(171, 62);
+			this.fpsCounterCheckBox.Name = "fpsCounterCheckBox";
+			this.fpsCounterCheckBox.Size = new System.Drawing.Size(122, 17);
+			this.fpsCounterCheckBox.TabIndex = 5;
+			this.fpsCounterCheckBox.Text = "Display FPS counter";
+			this.fpsCounterCheckBox.UseVisualStyleBackColor = true;
 			// 
 			// ConfigDialog
 			// 
@@ -267,6 +278,7 @@
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.CancelButton = this.cancelButton;
 			this.ClientSize = new System.Drawing.Size(305, 431);
+			this.Controls.Add(this.fpsCounterCheckBox);
 			this.Controls.Add(this.cancelButton);
 			this.Controls.Add(okButton);
 			this.Controls.Add(this.levelDownButton);
@@ -309,5 +321,6 @@
 		private System.Windows.Forms.Button levelUpButton;
 		private System.Windows.Forms.Button levelDownButton;
 		private System.Windows.Forms.Button cancelButton;
+		private System.Windows.Forms.CheckBox fpsCounterCheckBox;
 	}
 }
