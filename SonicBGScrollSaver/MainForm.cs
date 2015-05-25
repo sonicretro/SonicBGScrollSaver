@@ -1,10 +1,12 @@
 ﻿using SonicRetro.SonLVL.API;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace SonicBGScrollSaver
@@ -55,7 +57,7 @@ namespace SonicBGScrollSaver
 			previewMode = true;
 		}
 
-		private static readonly System.Timers.Timer FrameTimer = new System.Timers.Timer() { AutoReset = true };
+		long frameTime;
 		private static readonly System.Timers.Timer SwitchTimer = new System.Timers.Timer();
 		Graphics gfx;
 		Level level;
@@ -80,7 +82,7 @@ namespace SonicBGScrollSaver
 				fpsLabel.Visible = settings.FpsCounter;
 			}
 			playMusic = settings.PlayMusic;
-			FrameTimer.Interval = 1 / (double)Math.Max(Math.Min((int)settings.FramesPerSecond, 60), 1) * 1000;
+			frameTime = (int)(1 / (double)Math.Max(Math.Min((int)settings.FramesPerSecond, 60), 1) * 1000);
 			frametimes = new Queue<DateTime>(settings.FramesPerSecond * 5);
 			hscrollspeed = settings.ScrollSpeed;
 			SwitchTimer.Interval = settings.DisplayTime.TotalMilliseconds;
@@ -104,7 +106,6 @@ namespace SonicBGScrollSaver
 				Close();
 				return;
 			}
-			FrameTimer.Elapsed += new System.Timers.ElapsedEventHandler(FrameTimer_Elapsed);
 			SwitchTimer.Elapsed += new System.Timers.ElapsedEventHandler(SwitchTimer_Elapsed);
 			Bounds = bounds;
 			ChangeLevel();
@@ -131,7 +132,8 @@ namespace SonicBGScrollSaver
 				DrawInvoker = DrawBackground;
 			if (!previewMode && playMusic)
 				level.PlayMusic();
-			FrameTimer.Start();
+			DrawThread = new Thread(DrawStuff);
+			DrawThread.Start();
 			if (levels.Count > 1)
 				SwitchTimer.Start();
 		}
@@ -159,20 +161,28 @@ namespace SonicBGScrollSaver
 		void SwitchTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
 		{
 			level = null;
-			FrameTimer.Stop();
+			DrawThread.Abort();
 			SwitchTimer.Stop();
 			ChangeLevel();
 		}
 
 		Action DrawInvoker;
-		void FrameTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+		Thread DrawThread;
+		void DrawStuff()
 		{
-			if (level == null) return;
-			level.UpdatePalette();
-			level.UpdateAnimatedTiles();
-			level.UpdateScrolling(hscrollspeed, vscrollspeed);
-			vscrollspeed = 0;
-			Invoke(DrawInvoker);
+			Stopwatch sw = new Stopwatch();
+			while (level != null)
+			{
+				sw.Start();
+				level.UpdatePalette();
+				level.UpdateAnimatedTiles();
+				level.UpdateScrolling(hscrollspeed, vscrollspeed);
+				vscrollspeed = 0;
+				Invoke(DrawInvoker);
+				while (sw.ElapsedMilliseconds < frameTime)
+					Thread.Sleep(0);
+				sw.Reset();
+			}
 		}
 
 		private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -211,13 +221,13 @@ namespace SonicBGScrollSaver
 					if (levels.Count == 1)
 						return;
 					level = null;
-					FrameTimer.Stop();
+					DrawThread.Abort();
 					SwitchTimer.Stop();
 					ChangeLevel();
 					break;
 				default:
 					level = null;
-					FrameTimer.Stop();
+					DrawThread.Abort();
 					Close();
 					break;
 			}
@@ -231,7 +241,7 @@ namespace SonicBGScrollSaver
 				if (Math.Sqrt(Math.Pow(e.X - lastmouse.Value.X, 2) + Math.Pow(e.Y - lastmouse.Value.Y, 2)) > 5)
 				{
 					level = null;
-					FrameTimer.Stop();
+					DrawThread.Abort();
 					Close();
 				}
 			lastmouse = e.Location;
@@ -241,7 +251,7 @@ namespace SonicBGScrollSaver
 		{
 			if (previewMode) return;
 			level = null;
-			FrameTimer.Stop();
+			DrawThread.Abort();
 			Close();
 		}
 	}
