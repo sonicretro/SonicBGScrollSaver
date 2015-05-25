@@ -61,7 +61,6 @@ namespace S2CNZ
 			lock (bgimg)
 			{
 				Camera_X_pos += Camera_X_pos_diff;
-				BitmapBits bmp = new BitmapBits(levelimg);
 				short d2 = Camera_X_pos;
 				int a1 = 0;
 				BWL d0 = d2;
@@ -109,10 +108,7 @@ namespace S2CNZ
 						}
 					}
 				}
-				bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
-				if (Width < bmp.Width)
-					bmp = bmp.GetSection(0, 0, Width, bmp.Height);
-				tmpimg.DrawBitmapBounded(bmp, 0, tmpimg.Height - bmp.Height);
+				levelimg.ScrollHV(tmpimg, tmpimg.Height - levelimg.Height, 0, Horiz_Scroll_Buf);
 				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}

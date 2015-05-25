@@ -93,7 +93,6 @@ namespace SBZ1
 				d4.sl <<= 5;
 				d4.sl += d4.sl * 2;
 				Camera_BG2_X_pos.l += d4.l;
-				BitmapBits bmp = new BitmapBits(levelimg);
 				int a1 = 0;
 				BWL d2 = Camera_X_pos;
 				d2.sw >>= 2;
@@ -120,15 +119,12 @@ namespace SBZ1
 				a1 += 11;
 				int a2 = 0;
 				a1 = 0;
-				while (a1 < bmp.Height)
+				while (a1 < levelimg.Height)
 				{
 					Horiz_Scroll_Buf.FastFill(TempArray_LayerDef[a2++], a1, 16);
 					a1 += 16;
 				}
-				bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
-				if (Width < bmp.Width)
-					bmp = bmp.GetSection(0, 0, Width, bmp.Height);
-				tmpimg.DrawBitmapBounded(bmp, 0, tmpimg.Height - bmp.Height);
+				levelimg.ScrollHV(tmpimg, tmpimg.Height - levelimg.Height, 0, Horiz_Scroll_Buf);
 				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}

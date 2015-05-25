@@ -56,7 +56,6 @@ namespace EHZ
 			lock (bgimg)
 			{
 				Camera_X_pos = (ushort)(Camera_X_pos + Camera_X_pos_diff);
-				BitmapBits bmp = new BitmapBits(levelimg);
 				//Array.Clear(Horiz_Scroll_Buf, 0, 22);
 				int bgpos = Camera_X_pos >> 6;
 				Horiz_Scroll_Buf.FastFill(bgpos, 22, 58);
@@ -103,10 +102,7 @@ namespace EHZ
 					bgpos2.sl += scrlamt * 4;
 				}
 				Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, 252, 3);
-				bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
-				if (Width < bmp.Width)
-					bmp = bmp.GetSection(0, 0, Width, bmp.Height);
-				tmpimg.DrawBitmapBounded(bmp, 0, tmpimg.Height - bmp.Height);
+				levelimg.ScrollHV(tmpimg, tmpimg.Height - levelimg.Height, 0, Horiz_Scroll_Buf);
 				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}

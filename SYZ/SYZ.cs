@@ -41,7 +41,6 @@ namespace SYZ
 			lock (bgimg)
 			{
 				Camera_X_pos += Camera_X_pos_diff;
-				BitmapBits bmp = new BitmapBits(levelimg);
 				int a1 = 0;
 				BWL d2 = Camera_X_pos;
 				BWL d0 = d2.sw >> 3;
@@ -87,15 +86,12 @@ namespace SYZ
 				}
 				int a2 = 0;
 				a1 = 0;
-				while (a1 < bmp.Height)
+				while (a1 < levelimg.Height)
 				{
 					Horiz_Scroll_Buf.FastFill(TempArray_LayerDef[a2++], a1, 16);
 					a1 += 16;
 				}
-				bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
-				if (Width < bmp.Width)
-					bmp = bmp.GetSection(0, 0, Width, bmp.Height);
-				tmpimg.DrawBitmapBounded(bmp, 0, tmpimg.Height - bmp.Height);
+				levelimg.ScrollHV(tmpimg, Math.Max(0, tmpimg.Height - levelimg.Height), 0, Horiz_Scroll_Buf);
 				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}
