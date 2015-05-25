@@ -145,7 +145,10 @@ namespace SonicBGScrollSaver
 			{
 				DateTime now = DateTime.Now;
 				if (frametimes.Count > 0)
+				{
 					fpsLabel.Text = "FPS: " + (frametimes.Count / (now - frametimes.Peek()).TotalSeconds).ToString("0.###");
+					Application.DoEvents();
+				}
 				if (frametimes.Count == settings.FramesPerSecond * 5)
 					frametimes.Dequeue();
 				frametimes.Enqueue(now);
