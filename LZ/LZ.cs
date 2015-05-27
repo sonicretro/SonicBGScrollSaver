@@ -14,7 +14,7 @@ namespace LZ
 		BWL Camera_BG_X_pos;
 		short Camera_BG_Y_pos;
 		BWL LZ_Water_Ripple;
-		BitmapBits levelimg;
+		BitmapBits levelimg, tmpimg;
 		Bitmap bgimg = new Bitmap(1, 1);
 		int Width, Height;
 		LevelInfo levelinfo;
@@ -58,6 +58,7 @@ namespace LZ
 			LevelData.LoadLevel("Level", true);
 			LevelData.BmpPal.Entries[0] = LevelData.Palette[0][2, 0].RGBColor;
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
+			tmpimg = new BitmapBits(Math.Min(width, levelimg.Width), height);
 			for (int l = 0; l < 4; l++)
 				for (int i = 0; i < 16; i++)
 					LevelData.BmpPal.Entries[(l * 16) + i + 64] = LevelData.Palette[1][l, i].RGBColor;
@@ -87,20 +88,6 @@ namespace LZ
 			{
 				Camera_BG_X_pos.sl += Camera_X_pos_diff << 15;
 				Camera_BG_Y_pos += Camera_Y_pos_diff;
-				BitmapBits bmp = new BitmapBits(levelimg);
-				bmp.ScrollVertical(Camera_BG_Y_pos);
-				if (Height < bmp.Height)
-					bmp = bmp.GetSection(0, 0, bmp.Width, Height);
-				else if (Height > bmp.Height && waterMode != WaterMode.None)
-				{
-					BitmapBits tmpbmp = new BitmapBits(bmp.Width, Height);
-					for (int i = 0; i < tmpbmp.Bits.Length; i += bmp.Bits.Length)
-						if (i + bmp.Bits.Length <= tmpbmp.Bits.Length)
-							bmp.Bits.CopyTo(tmpbmp.Bits, i);
-						else
-							Array.Copy(bmp.Bits, 0, tmpbmp.Bits, i, tmpbmp.Bits.Length % bmp.Bits.Length);
-					bmp = tmpbmp;
-				}
 				if (!oscDir)
 				{
 					oscRate += oscFreq;
@@ -123,13 +110,11 @@ namespace LZ
 					if (waterMode == WaterMode.Partial)
 						screenwater = waterheight - Camera_BG_Y_pos + (oscVal.b1 >> 1);
 					if (screenwater > 0)
-						Horiz_Scroll_Buf.FastFill(Camera_BG_X_pos.hsw, 0, Math.Min(screenwater, bmp.Height));
+						Horiz_Scroll_Buf.FastFill(Camera_BG_X_pos.hsw, 0, Math.Min(screenwater, tmpimg.Height));
 					d2 = (byte)(d2 + screenwater);
-					for (int i = Math.Max(screenwater, 0); i < bmp.Height; i++)
+					for (int i = Math.Max(screenwater, 0); i < tmpimg.Height; i++)
 						Horiz_Scroll_Buf[i] = Camera_BG_X_pos.hsw + Drown_WobbleData[d2++];
-					bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
-					if (Width < bmp.Width)
-						bmp = bmp.GetSection(0, 0, Width, bmp.Height);
+					levelimg.ScrollHV(tmpimg, 0, Camera_BG_Y_pos, Horiz_Scroll_Buf);
 					if (waterMode == WaterMode.Partial)
 					{
 						int surfx = -(Camera_BG_X_pos.hsw % 0x20) + 0x60;
@@ -141,19 +126,15 @@ namespace LZ
 							surfacetimer = 7;
 							surfaceframe = (byte)((surfaceframe + 1) % 3);
 						}
-						for (int i = 0; i < bmp.Width; i += 0xC0)
-							bmp.DrawSprite(surfacesprites[surfaceframe], surfx + i, screenwater);
+						for (int i = 0; i < tmpimg.Width; i += 0xC0)
+							tmpimg.DrawSprite(surfacesprites[surfaceframe], surfx + i, screenwater);
 					}
 					if (screenwater < Height)
-						bmp.ApplyWaterPalette(Math.Max(screenwater, 0));
+						tmpimg.ApplyWaterPalette(Math.Max(screenwater, 0));
 				}
 				else
-				{
-					bmp.ScrollHorizontal(Camera_BG_X_pos.hsw);
-					if (Width < bmp.Width)
-						bmp = bmp.GetSection(0, 0, Width, bmp.Height);
-				}
-				bgimg = bmp.ToBitmap(LevelData.BmpPal);
+					levelimg.ScrollHV(tmpimg, 0, Camera_BG_Y_pos, Camera_BG_X_pos.hsw);
+				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}
 
