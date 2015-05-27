@@ -13,7 +13,7 @@ namespace S2DEZ
 		readonly int[] TempArray_LayerDef = new int[256];
 		int[] Horiz_Scroll_Buf;
 		int Camera_X_pos, Camera_Y_pos;
-		BitmapBits levelimg;
+		BitmapBits levelimg, tmpimg;
 		Bitmap bgimg = new Bitmap(1, 1);
 		int Width, Height;
 
@@ -33,9 +33,19 @@ namespace S2DEZ
 			LevelData.LoadLevel("Level", true);
 			LevelData.BmpPal.Entries[0] = LevelData.Palette[0][2, 0].RGBColor;
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
+			tmpimg = new BitmapBits(Math.Min(levelimg.Width, width), height);
+			tmpimg.Bits.FastFill(0x2D);
 			Horiz_Scroll_Buf = new int[Math.Min(height, levelimg.Height)];
 			if (height > levelimg.Height)
+			{
 				Camera_Y_pos = (short)((levelimg.Height / 2) - (height / 2) - 32);
+				BitmapBits tmp = new BitmapBits(levelimg.Width, height + Camera_Y_pos);
+				tmp.Bits.FastFill(0x2D);
+				levelimg.Bits.CopyTo(tmp.Bits, 0);
+				levelimg = tmp;
+			}
+			else
+				Camera_Y_pos = 0;
 			Camera_X_pos = 0;
 			Array.Clear(TempArray_LayerDef, 0, TempArray_LayerDef.Length);
 			UpdateScrolling(0, 0);
@@ -51,9 +61,6 @@ namespace S2DEZ
 			lock (bgimg)
 			{
 				Camera_X_pos += Camera_X_pos_diff;
-				BitmapBits bmp = new BitmapBits(levelimg);
-				if (Height < bmp.Height)
-					bmp = bmp.GetSection(0, 0, bmp.Width, Height);
 				BWL d4 = Camera_X_pos;
 				int a2 = 0;
 				TempArray_LayerDef[a2++] += 3;
@@ -127,22 +134,14 @@ namespace S2DEZ
 						d0.sw = (short)TempArray_LayerDef[a2++];
 					}
 				}
-				bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
-				if (Width < bmp.Width)
-					bmp = bmp.GetSection(0, 0, Width, bmp.Height);
-				if (Height > bmp.Height)
-				{
-					BitmapBits tmpbmp = new BitmapBits(bmp.Width, Height);
-					tmpbmp.Bits.FastFill(0x2D);
-					bmp.Bits.CopyTo(tmpbmp.Bits, tmpbmp.GetPixelIndex(0, -Camera_Y_pos));
+				levelimg.ScrollHV(tmpimg, -Camera_Y_pos, 0, Horiz_Scroll_Buf);
+				if (Height > levelimg.Height)
 					for (int i = -Camera_Y_pos; i >= 0; i -= 224)
 						if (i - 224 >= 0)
-							Array.Copy(bmp.Bits, 0, tmpbmp.Bits, tmpbmp.GetPixelIndex(0, i - 224), tmpbmp.GetPixelIndex(0, 224));
+							Array.Copy(tmpimg.Bits, tmpimg.GetPixelIndex(0, -Camera_Y_pos), tmpimg.Bits, tmpimg.GetPixelIndex(0, i - 224), tmpimg.GetPixelIndex(0, 224));
 						else
-							Array.Copy(bmp.Bits, bmp.GetPixelIndex(0, 224 - i), tmpbmp.Bits, 0, bmp.GetPixelIndex(0, i));
-					bmp = tmpbmp;
-				}
-				bgimg = bmp.ToBitmap(LevelData.BmpPal);
+							Array.Copy(tmpimg.Bits, tmpimg.GetPixelIndex(0, -Camera_Y_pos + (224 - i)), tmpimg.Bits, 0, tmpimg.GetPixelIndex(0, i));
+				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}
 
