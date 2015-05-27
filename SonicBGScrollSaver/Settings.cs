@@ -12,13 +12,17 @@ namespace SonicBGScrollSaver
 	public class Settings
 	{
 		[DefaultValue(true)]
+		[IniAlwaysInclude]
 		public bool PlayMusic { get; set; }
 		[DefaultValue(100)]
+		[IniAlwaysInclude]
 		public int MusicVolume { get; set; }
-		[DefaultValue(30)]
+		[DefaultValue(60)]
+		[IniAlwaysInclude]
 		public byte FramesPerSecond { get; set; }
 		public bool FpsCounter { get; set; }
-		[DefaultValue(8)]
+		[DefaultValue(4)]
+		[IniAlwaysInclude]
 		public short ScrollSpeed { get; set; }
 		[TypeConverter(typeof(CustomTimeSpanConverter))]
 		public TimeSpan DisplayTime { get; set; }
