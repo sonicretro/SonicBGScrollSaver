@@ -159,7 +159,7 @@ namespace SonicBGScrollSaver
 				if (frametimes.Count > 0)
 				{
 					fpsLabel.Text = "FPS: " + (frametimes.Count / (now - frametimes.Peek()).TotalSeconds).ToString("0.###");
-					Application.DoEvents();
+					if (Program.IsWindows) Application.DoEvents();
 				}
 				if (frametimes.Count == settings.FramesPerSecond * 5)
 					frametimes.Dequeue();
