@@ -31,6 +31,10 @@ namespace SonicBGScrollSaver
 		{
 			[DllImport("user32.dll")]
 			public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+			[DllImport("winmm.dll", ExactSpelling = true)]
+			public static extern uint timeBeginPeriod(uint uPeriod);
+			[DllImport("winmm.dll", ExactSpelling = true)]
+			public static extern uint timeEndPeriod(uint uPeriod);
 		}
 
 		public MainForm(IntPtr previewWndHandle)
@@ -115,6 +119,7 @@ namespace SonicBGScrollSaver
 			}
 			SwitchTimer.Elapsed += new System.Timers.ElapsedEventHandler(SwitchTimer_Elapsed);
 			Bounds = bounds;
+			NativeMethods.timeBeginPeriod(1);
 			ChangeLevel();
 		}
 
@@ -199,7 +204,7 @@ namespace SonicBGScrollSaver
 				sw.Start();
 				DoFrame();
 				while (sw.ElapsedMilliseconds < frameTime)
-					Thread.Sleep(0);
+					Thread.Sleep((int)Math.Max(0, frameTime - sw.ElapsedMilliseconds - 1));
 				sw.Reset();
 			}
 		}
