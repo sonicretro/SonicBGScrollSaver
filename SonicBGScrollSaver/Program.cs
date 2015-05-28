@@ -7,6 +7,8 @@ namespace SonicBGScrollSaver
 {
 	static class Program
 	{
+		private static readonly bool isWindows = !(Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.Xbox);
+		internal static bool IsWindows { get { return isWindows; } }
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
