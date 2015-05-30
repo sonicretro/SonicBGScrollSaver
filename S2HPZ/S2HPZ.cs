@@ -12,9 +12,9 @@ namespace S2HPZ
 	{
 		readonly int[] TempArray_LayerDef = new int[256];
 		int[] Horiz_Scroll_Buf;
-		BWL Camera_BG_X_pos, Camera_BG_Y_pos = new BWL(0, 0x40);
-		ushort Camera_X_pos;
-		BitmapBits levelimg;
+		BWL Camera_BG_X_pos;
+		short Camera_X_pos, Camera_Y_pos;
+		BitmapBits levelimg, tmpimg;
 		Bitmap bgimg = new Bitmap(1, 1);
 		Color[] CyclingPal_HPZWater;
 		short PalCycle_Timer, PalCycle_Frame;
@@ -30,9 +30,8 @@ namespace S2HPZ
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
 			CyclingPal_HPZWater = SonLVLColor.Load("HPZ Water Cycle.bin", EngineVersion.S2).Select(a => a.RGBColor).ToArray();
 			Horiz_Scroll_Buf = new int[Math.Min(height, levelimg.Height)];
-			Camera_BG_Y_pos.hsw = -0x40;
-			if (height < levelimg.Height)
-				Camera_BG_Y_pos.hsw += (short)((levelimg.Height / 2) - (height / 2));
+			tmpimg = new BitmapBits(Math.Min(levelimg.Width, width), Math.Min(levelimg.Height, height));
+			Camera_Y_pos = (short)((levelimg.Height / 2) - (height / 2) - 0x40);
 			Camera_BG_X_pos = 0;
 			Camera_X_pos = 0;
 			PalCycle_Timer = 0;
@@ -49,12 +48,8 @@ namespace S2HPZ
 		{
 			lock (bgimg)
 			{
-				Camera_X_pos = (ushort)(Camera_X_pos + Camera_X_pos_diff);
-				Camera_BG_Y_pos.sw += Camera_Y_pos_diff;
-				BitmapBits bmp = new BitmapBits(levelimg);
-				bmp.ScrollVertical(Camera_BG_Y_pos.hsw);
-				if (Height < bmp.Height)
-					bmp = bmp.GetSection(0, 0, bmp.Width, Height);
+				Camera_X_pos += Camera_X_pos_diff;
+				Camera_Y_pos += Camera_Y_pos_diff;
 				Camera_BG_X_pos.sl += Camera_X_pos_diff << 14;
 				int a1 = 0;
 				BWL d2 = (short)-Camera_X_pos;
@@ -109,7 +104,7 @@ namespace S2HPZ
 					TempArray_LayerDef[a1++] = d0.sw;
 				d3 = 0x3F;
 				a2 = 0;
-				BWL d4 = Camera_BG_Y_pos.hsw;
+				BWL d4 = Camera_Y_pos;
 				d2.w = d4.w;
 				d4.w >>= 4;
 				d4.w &= d3.w;
@@ -119,7 +114,7 @@ namespace S2HPZ
 					d2 = 16;
 				while (a2 < Horiz_Scroll_Buf.Length)
 				{
-					d0 = -TempArray_LayerDef[d4.w++] % bmp.Width;
+					d0 = -TempArray_LayerDef[d4.w++];
 					d4.w &= d3.w;
 					for (int i = 0; i < d2.w; i++)
 					{
@@ -129,10 +124,8 @@ namespace S2HPZ
 					}
 					d2 = 16;
 				}
-				bmp.ScrollHorizontal((int[])Horiz_Scroll_Buf.Clone());
-				if (Width < bmp.Width)
-					bmp = bmp.GetSection(0, 0, Width, bmp.Height);
-				bgimg = bmp.ToBitmap(LevelData.BmpPal);
+				levelimg.ScrollHV(tmpimg, 0, Camera_Y_pos, Horiz_Scroll_Buf);
+				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}
 
