@@ -97,14 +97,8 @@ namespace MZ
 				a1 += 9;
 				TempArray_LayerDef.FastFill(Camera_BG_X_pos.hw, a1, TempArray_LayerDef.Length - a1);
 				int a2 = 0;
-				d0.sw = Camera_Y_pos;
-				d2.w = d0.w;
-				d0.w &= 0x1F0;
-				d0.sw >>= 4;
-				a2 = d0.sw;
+				d2.w = 16;
 				a1 = 0;
-				d2.w &= 0xF;
-				d2.w = (ushort)(16 - d2.w);
 				while (a1 < levelimg[AnimFrame].Height)
 				{
 					Horiz_Scroll_Buf.FastFill(TempArray_LayerDef[a2++], a1, d2.w);

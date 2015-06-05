@@ -114,7 +114,13 @@ namespace LZ
 					d2 = (byte)(d2 + screenwater);
 					for (int i = Math.Max(screenwater, 0); i < tmpimg.Height; i++)
 						Horiz_Scroll_Buf[i] = Camera_BG_X_pos.hsw + Drown_WobbleData[d2++];
-					levelimg.ScrollHV(tmpimg, 0, Camera_BG_Y_pos, Horiz_Scroll_Buf);
+					int[] tmpbuf = new int[Horiz_Scroll_Buf.Length];
+					int y = Camera_BG_Y_pos % levelimg.Height;
+					if (y < 0)
+						y += levelimg.Height;
+					for (int i = 0; i < Horiz_Scroll_Buf.Length; i++)
+						tmpbuf[(i + y) % Horiz_Scroll_Buf.Length] = Horiz_Scroll_Buf[i];
+					levelimg.ScrollHV(tmpimg, 0, Camera_BG_Y_pos, tmpbuf);
 					if (waterMode == WaterMode.Partial)
 					{
 						int surfx = -(Camera_BG_X_pos.hsw % 0x20) + 0x60;

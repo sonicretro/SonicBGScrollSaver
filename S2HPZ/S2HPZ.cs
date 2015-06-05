@@ -29,7 +29,7 @@ namespace S2HPZ
 			LevelData.BmpPal.Entries[0] = LevelData.Palette[0][2, 0].RGBColor;
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
 			CyclingPal_HPZWater = SonLVLColor.Load("HPZ Water Cycle.bin", EngineVersion.S2).Select(a => a.RGBColor).ToArray();
-			Horiz_Scroll_Buf = new int[Math.Min(height, levelimg.Height)];
+			Horiz_Scroll_Buf = new int[levelimg.Height];
 			tmpimg = new BitmapBits(Math.Min(levelimg.Width, width), Math.Min(levelimg.Height, height));
 			Camera_Y_pos = (short)((levelimg.Height / 2) - (height / 2) - 0x40);
 			Camera_BG_X_pos = 0;
@@ -102,27 +102,14 @@ namespace S2HPZ
 				d0.w >>= 1;
 				for (int i = 0; i < 0x18; i++)
 					TempArray_LayerDef[a1++] = d0.sw;
-				d3 = 0x3F;
 				a2 = 0;
-				BWL d4 = Camera_Y_pos;
-				d2.w = d4.w;
-				d4.w >>= 4;
-				d4.w &= d3.w;
+				d2.w = 16;
 				a1 = 0;
-				d2.w &= 0xF;
-				if (d2.w == 0)
-					d2 = 16;
 				while (a2 < Horiz_Scroll_Buf.Length)
 				{
-					d0 = -TempArray_LayerDef[d4.w++];
-					d4.w &= d3.w;
-					for (int i = 0; i < d2.w; i++)
-					{
-						Horiz_Scroll_Buf[a2++] = d0.sl;
-						if (a2 == Horiz_Scroll_Buf.Length)
-							break;
-					}
-					d2 = 16;
+					Horiz_Scroll_Buf.FastFill(-TempArray_LayerDef[a1++], a2, d2.w);
+					a2 += d2.w;
+					d2.w = (ushort)Math.Min(16, Horiz_Scroll_Buf.Length - a1);
 				}
 				levelimg.ScrollHV(tmpimg, 0, Camera_Y_pos, Horiz_Scroll_Buf);
 				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);

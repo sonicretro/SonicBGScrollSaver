@@ -35,7 +35,7 @@ namespace S2DEZ
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
 			tmpimg = new BitmapBits(Math.Min(levelimg.Width, width), height);
 			tmpimg.Bits.FastFill(0x2D);
-			Horiz_Scroll_Buf = new int[Math.Min(height, levelimg.Height)];
+			Horiz_Scroll_Buf = new int[levelimg.Height];
 			if (height > levelimg.Height)
 			{
 				Camera_Y_pos = (short)((levelimg.Height / 2) - (height / 2) - 32);
@@ -114,16 +114,8 @@ namespace S2DEZ
 				TempArray_LayerDef[a2++] = d4.sw;
 				int a3 = 0;
 				a2 = 0;
-				d1 = Math.Max(Camera_Y_pos, 0);
+				d1 = byte_D48A[0];
 				d0.l = 0;
-				do
-				{
-					d0.b = byte_D48A[a3++];
-					++a2;
-					d1.sw -= d0.sw;
-				} while (d1.sw >= 0);
-				d1.sw = (short)-d1.sw;
-				--a2;
 				d0.sw = (short)TempArray_LayerDef[a2++];
 				for (int i = 0; i < Horiz_Scroll_Buf.Length; i++)
 				{
