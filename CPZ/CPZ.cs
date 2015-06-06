@@ -17,7 +17,7 @@ namespace CPZ
 		BitmapBits levelimg, tmpimg;
 		Bitmap bgimg = new Bitmap(1, 1);
 		int Width, Height;
-		int AnimWait, AnimTime, AnimFrame;
+		int AnimTime, AnimFrame;
 		BitmapBits[] CPZAnimBackImgs, CPZAnimBackImgsFlip;
 		List<Point> Anim1Locs, Anim2Locs;
 		short[] pal_lengths = new short[3] { 9, 0x15, 0xF };
@@ -63,7 +63,7 @@ namespace CPZ
 				CPZAnimBackImgsFlip[i] = new BitmapBits(CPZAnimBackImgs[i]);
 				CPZAnimBackImgsFlip[i].Flip(true, false);
 			}
-			AnimFrame = AnimTime = AnimWait = 0;
+			AnimFrame = AnimTime = 0;
 			Anim1Locs = new List<Point>();
 			Anim2Locs = new List<Point>();
 			for (int cy = 0; cy < LevelData.BGHeight; cy++)
@@ -84,7 +84,7 @@ namespace CPZ
 			framecounter = 0;
 			Camera_X_pos = 0;
 			if (levelimg.Height < Height)
-				Camera_Y_pos = Height - levelimg.Height;
+				Camera_Y_pos = levelimg.Height - Height;
 			else
 				Camera_Y_pos = 0;
 			Camera_BG_X_pos = 0;
