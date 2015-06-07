@@ -63,7 +63,7 @@ namespace ARZ
 				int a3 = 3;
 				BWL d0 = (int)Camera_X_pos;
 				d0.sl <<= 4;
-				d0.sl /= 4;
+				d0.sl /= 10;
 				d0.ExtendL();
 				d0.sl <<= 12;
 				BWL d1 = d0;
