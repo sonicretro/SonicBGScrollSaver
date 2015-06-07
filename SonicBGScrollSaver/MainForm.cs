@@ -119,7 +119,8 @@ namespace SonicBGScrollSaver
 			}
 			SwitchTimer.Elapsed += new System.Timers.ElapsedEventHandler(SwitchTimer_Elapsed);
 			Bounds = bounds;
-			NativeMethods.timeBeginPeriod(1);
+			if (Program.IsWindows)
+				NativeMethods.timeBeginPeriod(1);
 			ChangeLevel();
 		}
 
