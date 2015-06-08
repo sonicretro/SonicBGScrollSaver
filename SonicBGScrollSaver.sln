@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPZ", "CPZ\CPZ.csproj", "{F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARZ", "ARZ\ARZ.csproj", "{DD08B157-1372-42C1-9799-AC766371F895}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCZ", "MCZ\MCZ.csproj", "{53B1A495-8DD9-4E95-83B0-1FCE5B048F79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{DD08B157-1372-42C1-9799-AC766371F895}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD08B157-1372-42C1-9799-AC766371F895}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD08B157-1372-42C1-9799-AC766371F895}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53B1A495-8DD9-4E95-83B0-1FCE5B048F79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53B1A495-8DD9-4E95-83B0-1FCE5B048F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53B1A495-8DD9-4E95-83B0-1FCE5B048F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53B1A495-8DD9-4E95-83B0-1FCE5B048F79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
