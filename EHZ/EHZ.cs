@@ -17,6 +17,8 @@ namespace EHZ
 		Color[] CyclingPal_EHZ_ARZ_Water;
 		short PalCycle_Timer, PalCycle_Frame;
 		int Width, Height;
+		LevelInfo levelinfo;
+		int scale;
 		byte framecounter;
 
 		byte[] SwScrl_RippleData = {
@@ -31,10 +33,16 @@ namespace EHZ
 		{
 			Width = width;
 			Height = height;
+			levelinfo = IniSerializer.Deserialize<LevelInfo>("setup.ini");
 			LevelData.LoadGame("./setup.ini");
 			LevelData.LoadLevel("Level", true);
 			LevelData.BmpPal.Entries[0] = LevelData.Palette[0][2, 0].RGBColor;
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
+			if (levelinfo.Scale < 1)
+				scale = height / levelimg.Height;
+			else
+				scale = levelinfo.Scale;
+			levelimg = levelimg.Scale(scale);
 			tmpimg = new BitmapBits(Math.Min(levelimg.Width, width), height);
 			tmpimg.Bits.FastFill(0x22);
 			CyclingPal_EHZ_ARZ_Water = SonLVLColor.Load("EHZ ARZ Water.bin", EngineVersion.S2).Select(a => a.RGBColor).ToArray();
@@ -57,19 +65,19 @@ namespace EHZ
 			{
 				Camera_X_pos = (ushort)(Camera_X_pos + Camera_X_pos_diff);
 				//Array.Clear(Horiz_Scroll_Buf, 0, 22);
-				int bgpos = Camera_X_pos >> 6;
-				Horiz_Scroll_Buf.FastFill(bgpos, 22, 58);
+				int bgpos = (Camera_X_pos * scale) >> 6;
+				Horiz_Scroll_Buf.FastFill(bgpos, 22 * scale, 58 * scale);
 				framecounter--;
 				int a2 = (framecounter >> 3) & 0x1F;
 				for (int i = 80; i < 101; i++)
-					Horiz_Scroll_Buf[i] = bgpos + SwScrl_RippleData[a2++];
+					Horiz_Scroll_Buf.FastFill(bgpos + SwScrl_RippleData[a2++] * scale, i * scale, scale);
 				//Array.Clear(Horiz_Scroll_Buf, 101, 11);
-				bgpos = Camera_X_pos >> 4;
-				Horiz_Scroll_Buf.FastFill(bgpos, 112, 16);
+				bgpos = (Camera_X_pos * scale) >> 4;
+				Horiz_Scroll_Buf.FastFill(bgpos, 112 * scale, 16 * scale);
 				bgpos += bgpos >> 1;
-				Horiz_Scroll_Buf.FastFill(bgpos, 128, 16);
-				BWL bgpos2 = new BWL(0, (short)(-Camera_X_pos >> 3));
-				int scrlamt = -Camera_X_pos >> 1;
+				Horiz_Scroll_Buf.FastFill(bgpos, 128 * scale, 16 * scale);
+				BWL bgpos2 = new BWL(0, (short)(-(Camera_X_pos * scale) >> 3));
+				int scrlamt = -(Camera_X_pos * scale) >> 1;
 				scrlamt -= bgpos2.hsw;
 				scrlamt <<= 8;
 				scrlamt /= 0x30;
@@ -77,32 +85,32 @@ namespace EHZ
 				scrlamt <<= 8;
 				for (int i = 144; i < 159; i++)
 				{
-					Horiz_Scroll_Buf[i] = -bgpos2.hsw;
+					Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, i * scale, scale);
 					bgpos2.sl += scrlamt;
 				}
 				for (int i = 159; i < 177; i += 2)
 				{
-					Horiz_Scroll_Buf[i] = -bgpos2.hsw;
-					Horiz_Scroll_Buf[i + 1] = -bgpos2.hsw;
-					bgpos2.sl += scrlamt * 2;
+					Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, i * scale, scale);
+					Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, (i + 1) * scale, scale);
+					bgpos2.sl += scrlamt * scale;
 				}
 				for (int i = 177; i < 225; i += 3)
 				{
-					Horiz_Scroll_Buf[i] = -bgpos2.hsw;
-					Horiz_Scroll_Buf[i + 1] = -bgpos2.hsw;
-					Horiz_Scroll_Buf[i + 2] = -bgpos2.hsw;
+					Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, i * scale, scale);
+					Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, (i + 1) * scale, scale);
+					Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, (i + 2) * scale, scale);
 					bgpos2.sl += scrlamt * 3;
 				}
 				for (int i = 225; i < 252; i += 4)
 				{
-					Horiz_Scroll_Buf[i] = -bgpos2.hsw;
-					Horiz_Scroll_Buf[i + 1] = -bgpos2.hsw;
-					Horiz_Scroll_Buf[i + 2] = -bgpos2.hsw;
-					Horiz_Scroll_Buf[i + 3] = -bgpos2.hsw;
+					Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, i * scale, scale);
+					Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, (i + 1) * scale, scale);
+					Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, (i + 2) * scale, scale);
+					Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, (i + 3) * scale, scale);
 					bgpos2.sl += scrlamt * 4;
 				}
-				Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, 252, 3);
-				levelimg.ScrollHV(tmpimg, tmpimg.Height - levelimg.Height, 0, Horiz_Scroll_Buf);
+				Horiz_Scroll_Buf.FastFill(-bgpos2.hsw, 252 * scale, 3 * scale);
+				levelimg.ScrollHV(tmpimg, Math.Max(tmpimg.Height - levelimg.Height, 0), 0, Horiz_Scroll_Buf);
 				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}
@@ -120,7 +128,7 @@ namespace EHZ
 
 		public override void PlayMusic()
 		{
-			SonicBGScrollSaver.Music.PlaySong(IniSerializer.Deserialize<MusicInfo>("setup.ini").Music);
+			SonicBGScrollSaver.Music.PlaySong(levelinfo.Music);
 		}
 	}
 
@@ -272,10 +280,33 @@ namespace EHZ
 		}
 	}
 
-	internal class MusicInfo
+	internal class LevelInfo
 	{
 		[System.ComponentModel.DefaultValue("EmeraldHill")]
 		[IniName("music")]
 		public string Music { get; set; }
+		[IniIgnore]
+		public int Scale { get; set; }
+		[System.ComponentModel.DefaultValue("Auto")]
+		[IniName("scale")]
+		public string ScaleString
+		{
+			get
+			{
+				if (Scale < 1)
+					return "Auto";
+				return Scale.ToString();
+			}
+			set
+			{
+				int i;
+				if (value.Equals("Auto", StringComparison.OrdinalIgnoreCase))
+					Scale = 0;
+				else if (int.TryParse(value, out i))
+					Scale = i;
+				else
+					Scale = 1;
+			}
+		}
 	}
 }

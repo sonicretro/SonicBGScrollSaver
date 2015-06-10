@@ -18,6 +18,8 @@ namespace S2CNZ
 		Color[] CyclingPal_CNZ1, CyclingPal_CNZ3, CyclingPal_CNZ4;
 		short PalCycle_Timer, PalCycle_Frame, PalCycle_Frame_CNZ;
 		int Width, Height;
+		LevelInfo levelinfo;
+		int scale;
 		byte framecounter;
 
 		static readonly byte[] byte_D156 = { 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0, 0xF0 };
@@ -34,10 +36,16 @@ namespace S2CNZ
 		{
 			Width = width;
 			Height = height;
+			levelinfo = IniSerializer.Deserialize<LevelInfo>("setup.ini");
 			LevelData.LoadGame("./setup.ini");
 			LevelData.LoadLevel("Level", true);
 			LevelData.BmpPal.Entries[0] = LevelData.Palette[0][2, 0].RGBColor;
 			levelimg = LevelData.DrawBackground(null, true, true, false, false);
+			if (levelinfo.Scale < 1)
+				scale = height / levelimg.Height;
+			else
+				scale = levelinfo.Scale;
+			levelimg = levelimg.Scale(scale);
 			tmpimg = new BitmapBits(Math.Min(levelimg.Width, width), height);
 			CyclingPal_CNZ1 = SonLVLColor.Load("CNZ Cycle 1.bin", EngineVersion.S2).Select(a => a.RGBColor).ToArray();
 			CyclingPal_CNZ3 = SonLVLColor.Load("CNZ Cycle 3.bin", EngineVersion.S2).Select(a => a.RGBColor).ToArray();
@@ -61,7 +69,7 @@ namespace S2CNZ
 			lock (bgimg)
 			{
 				Camera_X_pos += Camera_X_pos_diff;
-				short d2 = Camera_X_pos;
+				short d2 = (short)(Camera_X_pos * scale);
 				int a1 = 0;
 				BWL d0 = d2;
 				d0.sw >>= 3;
@@ -89,7 +97,8 @@ namespace S2CNZ
 				d0.sw = (short)TempArray_LayerDef[a2++];
 				while (a1 < Horiz_Scroll_Buf.Length)
 				{
-					Horiz_Scroll_Buf[a1++] = d0.sw;
+					Horiz_Scroll_Buf.FastFill(d0.sw, a1, scale);
+					a1 += scale;
 					--d1;
 					while (d1 == 0)
 					{
@@ -104,11 +113,14 @@ namespace S2CNZ
 							d0.sw &= 0x1F;
 							int a4 = d0.sw;
 							for (int i = 0; i < 0x10; i++)
-								Horiz_Scroll_Buf[a1++] = SwScrl_RippleData[a4++] + d3.sw;
+							{
+								Horiz_Scroll_Buf.FastFill(SwScrl_RippleData[a4++] * scale + d3.sw, a1, scale);
+								a1 += scale;
+							}
 						}
 					}
 				}
-				levelimg.ScrollHV(tmpimg, tmpimg.Height - levelimg.Height, 0, Horiz_Scroll_Buf);
+				levelimg.ScrollHV(tmpimg, Math.Max(tmpimg.Height - levelimg.Height, 0), 0, Horiz_Scroll_Buf);
 				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}
@@ -137,7 +149,7 @@ namespace S2CNZ
 
 		public override void PlayMusic()
 		{
-			SonicBGScrollSaver.Music.PlaySong(IniSerializer.Deserialize<MusicInfo>("setup.ini").Music);
+			SonicBGScrollSaver.Music.PlaySong(levelinfo.Music);
 		}
 	}
 
@@ -289,10 +301,33 @@ namespace S2CNZ
 		}
 	}
 
-	internal class MusicInfo
+	internal class LevelInfo
 	{
 		[System.ComponentModel.DefaultValue("CasinoNight")]
 		[IniName("music")]
 		public string Music { get; set; }
+		[IniIgnore]
+		public int Scale { get; set; }
+		[System.ComponentModel.DefaultValue("Auto")]
+		[IniName("scale")]
+		public string ScaleString
+		{
+			get
+			{
+				if (Scale < 1)
+					return "Auto";
+				return Scale.ToString();
+			}
+			set
+			{
+				int i;
+				if (value.Equals("Auto", StringComparison.OrdinalIgnoreCase))
+					Scale = 0;
+				else if (int.TryParse(value, out i))
+					Scale = i;
+				else
+					Scale = 1;
+			}
+		}
 	}
 }
