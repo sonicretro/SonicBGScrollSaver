@@ -12,7 +12,8 @@ namespace MZ
 	{
 		readonly int[] TempArray_LayerDef = new int[256];
 		int[] Horiz_Scroll_Buf;
-		short Camera_X_pos, Camera_Y_pos;
+		short Camera_X_pos;
+		int Camera_Y_pos;
 		BWL Camera_BG_X_pos, Camera_BG2_X_pos, Camera_BG3_X_pos;
 		BitmapBits[] levelimg;
 		BitmapBits tmpimg;
@@ -44,6 +45,10 @@ namespace MZ
 			tmpimg = new BitmapBits(Math.Min(levelimg[0].Width, width), height);
 			Horiz_Scroll_Buf = new int[levelimg[0].Height];
 			Camera_X_pos = 0;
+			if (levelimg[0].Height < Height)
+				Camera_Y_pos = levelimg[0].Height - Height;
+			else
+				Camera_Y_pos = 0;
 			Camera_BG_X_pos = 0;
 			Camera_BG2_X_pos = 0;
 			Camera_BG3_X_pos = 0;
@@ -63,9 +68,8 @@ namespace MZ
 			lock (bgimg)
 			{
 				Camera_X_pos += Camera_X_pos_diff;
-				Camera_Y_pos = (short)Math.Max(0, Camera_Y_pos + Camera_Y_pos_diff);
-				if (Camera_Y_pos + Height > levelimg[AnimFrame].Height)
-					Camera_Y_pos = (short)Math.Max(0, levelimg[AnimFrame].Height - Height);
+				if (levelimg[AnimFrame].Height > Height)
+					Camera_Y_pos = Math.Min(Math.Max(0, Camera_Y_pos + Camera_Y_pos_diff), levelimg[AnimFrame].Height - Height);
 				BWL d4 = (int)(Camera_X_pos_diff << 8);
 				d4.sl <<= 6;
 				Camera_BG3_X_pos.l += d4.l;
@@ -105,7 +109,7 @@ namespace MZ
 					a1 += d2.w;
 					d2.w = (ushort)Math.Min(16, levelimg[AnimFrame].Height - a1);
 				}
-				levelimg[AnimFrame].ScrollHV(tmpimg, 0, Camera_Y_pos, Horiz_Scroll_Buf);
+				levelimg[AnimFrame].ScrollHV(tmpimg, Math.Max(0, -Camera_Y_pos), Math.Max(0, Camera_Y_pos), Horiz_Scroll_Buf);
 				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}
