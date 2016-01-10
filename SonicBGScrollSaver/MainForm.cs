@@ -79,6 +79,7 @@ namespace SonicBGScrollSaver
 			gfx.SetOptions();
 			Environment.CurrentDirectory = Application.StartupPath;
 			settings = Settings.Load();
+			NativeFuncs.Init();
 			if (!previewMode)
 			{
 				Music.Init();

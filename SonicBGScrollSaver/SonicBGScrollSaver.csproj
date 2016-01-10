@@ -77,6 +77,7 @@
     <Compile Include="ConfigDialog.Designer.cs">
       <DependentUpon>ConfigDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Extensions.cs" />
     <Compile Include="HourControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

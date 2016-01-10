@@ -106,7 +106,7 @@ namespace GHZ
 					d3.l += d2.l;
 					d3.Swap();
 				}
-				levelimg.ScrollHV(tmpimg, Math.Max(tmpimg.Height - levelimg.Height, 0), 0, Horiz_Scroll_Buf);
+				SonicBGScrollSaver.NativeFuncs.ScrollHV(levelimg, tmpimg, Math.Max(tmpimg.Height - levelimg.Height, 0), 0, Horiz_Scroll_Buf);
 				bgimg = tmpimg.ToBitmap(LevelData.BmpPal);
 			}
 		}
