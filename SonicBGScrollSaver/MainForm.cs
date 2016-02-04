@@ -1,4 +1,5 @@
-﻿using SonicRetro.SonLVL.API;
+﻿using SharpDX.Direct2D1;
+using SonicRetro.SonLVL.API;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +9,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using D2DBitmap = SharpDX.Direct2D1.Bitmap;
+using GDIpBitmap = System.Drawing.Bitmap;
+using System.Drawing.Imaging;
 
 namespace SonicBGScrollSaver
 {
@@ -64,7 +68,6 @@ namespace SonicBGScrollSaver
 		long frameTime;
 		readonly System.Timers.Timer FrameTimer = new System.Timers.Timer() { AutoReset = true };
 		readonly System.Timers.Timer SwitchTimer = new System.Timers.Timer();
-		Graphics gfx;
 		Level level;
 		short hscrollspeed = 8, vscrollspeed;
 		Settings settings;
@@ -72,11 +75,23 @@ namespace SonicBGScrollSaver
 		int currentlevel = -1;
 		bool playMusic;
 		Queue<DateTime> frametimes;
+		Factory d2dfactory = new Factory();
+		WindowRenderTarget d2drendertarget;
+		static SharpDX.Direct2D1.PixelFormat pixelformat = new SharpDX.Direct2D1.PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, AlphaMode.Ignore);
+		SharpDX.DirectWrite.Factory dwfactory = new SharpDX.DirectWrite.Factory();
+		SharpDX.DirectWrite.TextFormat textformat;
+		SolidColorBrush textbrush;
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			gfx = CreateGraphics();
-			gfx.SetOptions();
+			HwndRenderTargetProperties rtp = new HwndRenderTargetProperties()
+				{
+					Hwnd = Handle,
+					PixelSize = new SharpDX.Size2(bounds.Width, bounds.Height),
+				};
+			d2drendertarget = new WindowRenderTarget(d2dfactory, new RenderTargetProperties(pixelformat), rtp);
+			textformat = new SharpDX.DirectWrite.TextFormat(dwfactory, Font.FontFamily.Name, (Font.SizeInPoints / 72) * 96);
+			textbrush = new SolidColorBrush(d2drendertarget, new SharpDX.Color4(1, 1, 0, 1));
 			Environment.CurrentDirectory = Application.StartupPath;
 			settings = Settings.Load();
 			if (!previewMode)
@@ -84,7 +99,6 @@ namespace SonicBGScrollSaver
 				Music.Init();
 				if (settings.MusicVolume != 100)
 					Music.SetVolume(settings.MusicVolume / 100d);
-				fpsLabel.Visible = settings.FpsCounter;
 			}
 			playMusic = settings.PlayMusic;
 			if (Program.IsWindows)
@@ -156,27 +170,41 @@ namespace SonicBGScrollSaver
 				SwitchTimer.Start();
 		}
 
+		BitmapProperties bmpprops = new BitmapProperties(pixelformat);
+		BitmapBrushProperties brushprops = new BitmapBrushProperties()
+		{
+			ExtendModeX = ExtendMode.Wrap,
+			ExtendModeY = ExtendMode.Wrap,
+			InterpolationMode = SharpDX.Direct2D1.BitmapInterpolationMode.NearestNeighbor
+		};
 		void DrawBackground()
 		{
-			BackgroundImage = level.GetBG();
+			d2drendertarget.BeginDraw();
+			GDIpBitmap bmp = level.GetBG().To32bpp();
+			BitmapData bd = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+			using (D2DBitmap d2dbmp = new D2DBitmap(d2drendertarget, new SharpDX.Size2(bmp.Width, bmp.Height), bmpprops))
+			{
+				d2dbmp.CopyFromMemory(bd.Scan0, bd.Stride);
+				bmp.UnlockBits(bd);
+				using (BitmapBrush bb = new BitmapBrush(d2drendertarget, d2dbmp, brushprops))
+					d2drendertarget.FillRectangle(new SharpDX.RectangleF(0, 0, Width, Height), bb);
+			}
 			if (settings.FpsCounter)
 			{
 				DateTime now = DateTime.Now;
 				if (frametimes.Count > 0)
-				{
-					fpsLabel.Text = "FPS: " + (frametimes.Count / (now - frametimes.Peek()).TotalSeconds).ToString("0.###");
-					if (Program.IsWindows) Application.DoEvents();
-				}
+					d2drendertarget.DrawText("FPS: " + (frametimes.Count / (now - frametimes.Peek()).TotalSeconds).ToString("0.###"), textformat, new SharpDX.RectangleF(10, 10, 1000, 0), textbrush);
 				if (frametimes.Count == settings.FramesPerSecond * 5)
 					frametimes.Dequeue();
 				frametimes.Enqueue(now);
 			}
+			d2drendertarget.EndDraw();
 		}
 
 		void DrawBackgroundPreview()
 		{
-			Bitmap tmp = level.GetBG();
-			BackgroundImage = new Bitmap(tmp, (int)(tmp.Width * previewScale), (int)(tmp.Height * previewScale));
+			System.Drawing.Bitmap tmp = level.GetBG();
+			BackgroundImage = new System.Drawing.Bitmap(tmp, (int)(tmp.Width * previewScale), (int)(tmp.Height * previewScale));
 		}
 
 		void SwitchTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -216,7 +244,7 @@ namespace SonicBGScrollSaver
 			level.UpdateAnimatedTiles();
 			level.UpdateScrolling(hscrollspeed, vscrollspeed);
 			vscrollspeed = 0;
-			Invoke(DrawInvoker);
+			DrawInvoker();
 		}
 
 		void FrameTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
