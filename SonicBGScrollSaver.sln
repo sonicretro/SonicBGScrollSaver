@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SonicBGScrollSaver", "SonicBGScrollSaver\SonicBGScrollSaver.csproj", "{299A269C-28FE-4A88-AD98-1598973CF327}"
 EndProject
@@ -38,6 +38,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCZ", "MCZ\MCZ.csproj", "{53B1A495-8DD9-4E95-83B0-1FCE5B048F79}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OOZ", "OOZ\OOZ.csproj", "{0F1EB346-D738-4727-B019-1B307D214E91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HTZ", "HTZ\HTZ.csproj", "{43DADA60-5557-474C-BA3F-51787D67831B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +119,10 @@ Global
 		{0F1EB346-D738-4727-B019-1B307D214E91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F1EB346-D738-4727-B019-1B307D214E91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F1EB346-D738-4727-B019-1B307D214E91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43DADA60-5557-474C-BA3F-51787D67831B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43DADA60-5557-474C-BA3F-51787D67831B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43DADA60-5557-474C-BA3F-51787D67831B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43DADA60-5557-474C-BA3F-51787D67831B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
