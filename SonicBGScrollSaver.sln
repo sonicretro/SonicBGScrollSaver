@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OOZ", "OOZ\OOZ.csproj", "{0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HTZ", "HTZ\HTZ.csproj", "{43DADA60-5557-474C-BA3F-51787D67831B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFZ", "WFZ\WFZ.csproj", "{77882E89-A68C-4A13-91F1-1C65983E02BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +125,10 @@ Global
 		{43DADA60-5557-474C-BA3F-51787D67831B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43DADA60-5557-474C-BA3F-51787D67831B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43DADA60-5557-474C-BA3F-51787D67831B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77882E89-A68C-4A13-91F1-1C65983E02BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77882E89-A68C-4A13-91F1-1C65983E02BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77882E89-A68C-4A13-91F1-1C65983E02BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77882E89-A68C-4A13-91F1-1C65983E02BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

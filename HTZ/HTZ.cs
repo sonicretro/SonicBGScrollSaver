@@ -333,7 +333,7 @@ namespace HTZ
 
 	internal class LevelInfo
 	{
-		[System.ComponentModel.DefaultValue("CasinoNight")]
+		[System.ComponentModel.DefaultValue("HillTop")]
 		[IniName("music")]
 		public string Music { get; set; }
 		[IniIgnore]
