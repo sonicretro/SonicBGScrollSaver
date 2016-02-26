@@ -64,7 +64,7 @@ namespace HTZ
 					Horiz_Scroll_Buf[a1] = d0.sw;
 				BWL d4 = d0;
 				d0.sw = (short)TempArray_LayerDef[0x11];
-				TempArray_LayerDef[0x11] += 4;
+				TempArray_LayerDef[0x11] += 4 * scale;
 				d2 -= d0.sw;
 				d0.sw = d2;
 				short d1 = d0.sw;
