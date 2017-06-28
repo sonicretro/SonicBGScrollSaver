@@ -4,8 +4,8 @@ using System.Drawing;
 
 namespace MHZ
 {
-    public class MHZ : SonicBGScrollSaver.Level
-    {
+	public class MHZ : SonicBGScrollSaver.Level
+	{
 		int Camera_X_pos, Camera_Y_pos;
 		BitmapBits levelimg, layer1img, layer2img;
 		Bitmap bgimg = new Bitmap(1, 1);
