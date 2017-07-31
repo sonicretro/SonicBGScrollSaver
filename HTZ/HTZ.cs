@@ -350,10 +350,9 @@ namespace HTZ
 			}
 			set
 			{
-				int i;
 				if (value.Equals("Auto", StringComparison.OrdinalIgnoreCase))
 					Scale = 0;
-				else if (int.TryParse(value, out i))
+				else if (int.TryParse(value, out int i))
 					Scale = i;
 				else
 					Scale = 1;

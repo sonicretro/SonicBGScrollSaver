@@ -56,8 +56,7 @@ namespace SonicBGScrollSaver
 			}
 			Environment.CurrentDirectory = dir;
 			NativeMethods.InitializeDriver();
-			uint custcnt;
-			IntPtr* p = NativeMethods.GetCustomSongs(out custcnt);
+			IntPtr* p = NativeMethods.GetCustomSongs(out uint custcnt);
 			for (uint i = 0; i < custcnt; i++)
 			{
 				string song = Marshal.PtrToStringAnsi(*(p++));
